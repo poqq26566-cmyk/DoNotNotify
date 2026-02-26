@@ -253,21 +253,7 @@ fun SettingsScreen(
                     }
                     .padding(16.dp),
             ) {
-                Text("Buy me a coffee!", style = MaterialTheme.typography.bodyLarge)
-            }
-            HorizontalDivider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val intent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://donotnotify.com/"))
-                        context.startActivity(intent)
-                    }
-                    .padding(16.dp),
-            ) {
-                Text("Visit Website", style = MaterialTheme.typography.bodyLarge)
+                Text("Support This App", style = MaterialTheme.typography.bodyLarge)
             }
             HorizontalDivider()
 

@@ -15,11 +15,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.AccessAlarms // Import the timer icon
+import androidx.compose.material.icons.filled.AccessAlarms
+import androidx.compose.material.icons.automirrored.outlined.Rule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -40,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.donotnotify.donotnotify.BlockerRule
 import com.donotnotify.donotnotify.RuleType
+import com.donotnotify.donotnotify.ui.components.EmptyState
 
 @Composable
 fun RulesScreen(
@@ -81,13 +84,12 @@ fun RulesScreen(
     ) {
         if (rules.isEmpty()) {
             item {
-                Text(
-                    text = "No rules have been created yet to block notifications. To create a rule, please switch to the \"History\" tab and select a notification that you would like to block.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 32.dp)
+                EmptyState(
+                    icon = Icons.AutoMirrored.Outlined.Rule,
+                    title = "No Rules Created",
+                    description = "Create rules to automatically block unwanted notifications. Tap a notification in the History tab to create a rule, or browse pre-built rules.",
+                    actionLabel = "Browse Pre-built Rules",
+                    onAction = onBrowsePrebuiltRulesClick
                 )
             }
         } else {
@@ -102,12 +104,12 @@ fun RulesScreen(
                 )
             }
             itemsIndexed(rules, key = { index, it -> "rule_${index}_${it.packageName}_${it.ruleType}" }) { _, rule ->
-                Card(
+                ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
                         .clickable { onRuleClick(rule) },
-                    colors = CardDefaults.cardColors(
+                    colors = CardDefaults.elevatedCardColors(
                         containerColor = if (rule.isEnabled) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                     )
                 ) {

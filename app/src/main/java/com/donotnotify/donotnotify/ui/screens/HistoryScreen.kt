@@ -26,8 +26,11 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Inbox
+import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.donotnotify.donotnotify.AppInfoStorage
 import com.donotnotify.donotnotify.SimpleNotification
+import com.donotnotify.donotnotify.ui.components.EmptyState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -232,20 +236,18 @@ fun HistoryScreen(
 
         if (notifications.isEmpty()) {
             item(contentType = "emptyMessage") {
-                Text(
-                    text = "Waiting to receive new notifications...",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
+                EmptyState(
+                    icon = Icons.Outlined.Inbox,
+                    title = "No Notifications Yet",
+                    description = "Notifications from your apps will appear here. Make sure the notification listener service is enabled."
                 )
             }
         } else if (filteredNotifications.isEmpty()) {
             item(contentType = "emptyMessage") {
-                Text(
-                    text = "No notifications match your search",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp)
+                EmptyState(
+                    icon = Icons.Outlined.SearchOff,
+                    title = "No Results Found",
+                    description = "No notifications match your search query. Try a different search term."
                 )
             }
         } else {
@@ -324,7 +326,7 @@ fun HistoryScreen(
                         }
                     }
                     itemsIndexed(notifs, key = { index, it -> "${appName}_${index}_${it.id ?: it.timestamp}" }, contentType = { _, _ -> "notification" }) { _, notification ->
-                        Card(
+                        ElevatedCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 8.dp)

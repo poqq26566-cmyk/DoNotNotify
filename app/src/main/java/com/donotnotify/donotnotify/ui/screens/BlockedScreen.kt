@@ -16,8 +16,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.donotnotify.donotnotify.SimpleNotification
+import com.donotnotify.donotnotify.ui.components.EmptyState
 
 @Composable
 fun BlockedScreen(
@@ -89,18 +92,15 @@ fun BlockedScreen(
     ) {
         if (notifications.isEmpty()) {
             item {
-                Text(
-                    text = "No notifications have been blocked recently.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                EmptyState(
+                    icon = Icons.Outlined.NotificationsOff,
+                    title = "No Blocked Notifications",
+                    description = "Notifications blocked by your rules will appear here. Create rules in the Rules tab to start blocking unwanted notifications."
                 )
             }
         } else {
             itemsIndexed(notifications, key = { index, it -> "blocked_${index}_${it.id ?: it.timestamp}" }) { _, notification ->
-                Card(
+                ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
