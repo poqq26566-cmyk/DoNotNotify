@@ -15,7 +15,8 @@ class BlockedNotificationHistoryStorage(private val context: Context) {
 
     private val gson = Gson()
     private val historyFile = File(context.filesDir, "blocked_notification_history.json")
-    private val maxHistorySize = 100 // Let's keep the history to a reasonable size
+    private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    private val historyDays get() = sharedPreferences.getInt("historyDays", 5)
 
     fun getHistory(): List<SimpleNotification> {
         if (!historyFile.exists()) {
@@ -24,7 +25,10 @@ class BlockedNotificationHistoryStorage(private val context: Context) {
         return try {
             val json = historyFile.readText()
             val type = object : TypeToken<List<SimpleNotification>>() {}.type
-            gson.fromJson(json, type) ?: emptyList()
+            val history: List<SimpleNotification> = gson.fromJson(json, type) ?: emptyList()
+            // Filter out old notifications based on historyDays setting
+            val cutoff = System.currentTimeMillis() - (historyDays * 24 * 60 * 60 * 1000L)
+            history.filter { it.timestamp >= cutoff }
         } catch (e: JsonSyntaxException) {
             Log.e(TAG, "Corrupted blocked notification history file, deleting", e)
             historyFile.delete()
@@ -54,11 +58,14 @@ class BlockedNotificationHistoryStorage(private val context: Context) {
 
         // Add the new or updated notification to the top of the list
         history.add(0, notification)
-        
-        val trimmedHistory = if (history.size > maxHistorySize) history.subList(0, maxHistorySize) else history
-        val json = gson.toJson(trimmedHistory)
+
+        // Prune old notifications based on historyDays setting
+        val cutoff = System.currentTimeMillis() - (historyDays * 24 * 60 * 60 * 1000L)
+        val filteredHistory = history.filter { it.timestamp >= cutoff }
+
+        val json = gson.toJson(filteredHistory)
         historyFile.writeText(json)
-        
+
         return isNew
     }
 

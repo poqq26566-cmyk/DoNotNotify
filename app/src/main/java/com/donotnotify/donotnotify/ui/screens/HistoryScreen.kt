@@ -239,7 +239,7 @@ fun HistoryScreen(
                 EmptyState(
                     icon = Icons.Outlined.Inbox,
                     title = "No Notifications Yet",
-                    description = "Notifications from your apps will appear here. Make sure the notification listener service is enabled."
+                    description = "Notifications from your apps will appear here."
                 )
             }
         } else if (filteredNotifications.isEmpty()) {
