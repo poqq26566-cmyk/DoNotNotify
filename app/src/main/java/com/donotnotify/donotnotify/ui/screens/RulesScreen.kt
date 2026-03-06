@@ -19,11 +19,10 @@ import androidx.compose.material.icons.filled.AccessAlarms
 import androidx.compose.material.icons.automirrored.outlined.Rule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -75,6 +74,9 @@ fun RulesScreen(
         )
     }
 
+    // Group rules by packageName; apps with multiple rules get a section header
+    val grouped = rules.groupBy { it.packageName ?: it.appName ?: "" }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -102,75 +104,36 @@ fun RulesScreen(
                         .padding(vertical = 16.dp)
                 )
             }
-            itemsIndexed(rules, key = { index, it -> "rule_${index}_${it.packageName}_${it.ruleType}" }) { _, rule ->
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .alpha(if (rule.isEnabled) 1f else 0.5f)
-                        .clickable { onRuleClick(rule) }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(start = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier
-                            .weight(1f)
-                            .padding(vertical = 12.dp)) {
-                            Text(
-                                text = rule.appName.orEmpty(),
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                textDecoration = if (rule.isEnabled) null else TextDecoration.LineThrough
-                            )
-                            val titleFilterText = if (rule.titleFilter.isNullOrBlank()) "N/A" else rule.titleFilter.orEmpty()
-                            Text(
-                                text = "Title: $titleFilterText",
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            val textFilterText = if (rule.textFilter.isNullOrBlank()) "N/A" else rule.textFilter.orEmpty()
-                            Text(
-                                text = "Text: $textFilterText",
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                        if (rule.advancedConfig?.isTimeLimitEnabled == true) {
-                            Icon(
-                                imageVector = Icons.Filled.AccessAlarms,
-                                contentDescription = "Time limited rule",
-                                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-                            )
-                        }
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        ) {
-                            val icon = if (rule.ruleType == RuleType.DENYLIST) Icons.Filled.Block else Icons.Filled.CheckCircle
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = rule.ruleType.name
-                            )
-                            if (rule.hitCount > 0) {
-                                Text(
-                                    text = "Hits: ${rule.hitCount}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            } else {
-                                Text(
-                                    text = "No hits",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                        // Removed the IconButton for deleting rules directly from the list
+            grouped.forEach { (_, appRules) ->
+                if (appRules.size == 1) {
+                    // Single rule — show as flat card (unchanged)
+                    item(key = "rule_${appRules[0].packageName}_${appRules[0].ruleType}_0") {
+                        RuleCard(rule = appRules[0], showAppName = true, onClick = { onRuleClick(appRules[0]) })
+                    }
+                } else {
+                    // Multiple rules — show a section header then indented rule cards
+                    val appName = appRules[0].appName.orEmpty()
+                    item(key = "header_${appRules[0].packageName}") {
+                        Text(
+                            text = "$appName (${appRules.size})",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp, bottom = 4.dp)
+                        )
+                        HorizontalDivider()
+                    }
+                    itemsIndexed(
+                        appRules,
+                        key = { index, rule -> "rule_${rule.packageName}_${rule.ruleType}_$index" }
+                    ) { _, rule ->
+                        RuleCard(
+                            rule = rule,
+                            showAppName = false,
+                            modifier = Modifier.padding(start = 8.dp),
+                            onClick = { onRuleClick(rule) }
+                        )
                     }
                 }
             }
@@ -191,6 +154,88 @@ fun RulesScreen(
                     .padding(top = 8.dp, bottom = 16.dp)
             ) {
                 Text("Browse Pre-built Rules")
+            }
+        }
+    }
+}
+
+@Composable
+private fun RuleCard(
+    rule: BlockerRule,
+    showAppName: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .alpha(if (rule.isEnabled) 1f else 0.5f)
+            .clickable { onClick() }
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 12.dp)
+            ) {
+                if (showAppName) {
+                    Text(
+                        text = rule.appName.orEmpty(),
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (rule.isEnabled) null else TextDecoration.LineThrough
+                    )
+                }
+                val titleFilterText = if (rule.titleFilter.isNullOrBlank()) "N/A" else rule.titleFilter.orEmpty()
+                Text(
+                    text = "Title: $titleFilterText",
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                val textFilterText = if (rule.textFilter.isNullOrBlank()) "N/A" else rule.textFilter.orEmpty()
+                Text(
+                    text = "Text: $textFilterText",
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            if (rule.advancedConfig?.isTimeLimitEnabled == true) {
+                Icon(
+                    imageVector = Icons.Filled.AccessAlarms,
+                    contentDescription = "Time limited rule",
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                val icon = if (rule.ruleType == RuleType.DENYLIST) Icons.Filled.Block else Icons.Filled.CheckCircle
+                Icon(
+                    imageVector = icon,
+                    contentDescription = rule.ruleType.name
+                )
+                if (rule.hitCount > 0) {
+                    Text(
+                        text = "Hits: ${rule.hitCount}",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    Text(
+                        text = "No hits",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
