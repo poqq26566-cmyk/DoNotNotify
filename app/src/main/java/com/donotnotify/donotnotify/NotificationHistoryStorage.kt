@@ -15,6 +15,7 @@ class NotificationHistoryStorage(private val context: Context) {
 
     private val gson = Gson()
     private val historyFile = File(context.filesDir, "notification_history.json")
+    private val historyTmpFile = File(context.filesDir, "notification_history.json.tmp")
     private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     private val historyDays get() = sharedPreferences.getInt("historyDays", 5)
 
@@ -58,21 +59,24 @@ class NotificationHistoryStorage(private val context: Context) {
         val filteredHistory = history.filter { it.timestamp >= cutoff }
 
         val json = gson.toJson(filteredHistory)
-        historyFile.writeText(json)
+        historyTmpFile.writeText(json)
+        historyTmpFile.renameTo(historyFile)
     }
 
     fun deleteNotification(notification: SimpleNotification) {
         val history = getHistory().toMutableList()
         history.remove(notification)
         val json = gson.toJson(history)
-        historyFile.writeText(json)
+        historyTmpFile.writeText(json)
+        historyTmpFile.renameTo(historyFile)
     }
 
     fun deleteNotificationsFromPackage(packageName: String) {
         val history = getHistory().toMutableList()
         history.removeAll { it.packageName == packageName }
         val json = gson.toJson(history)
-        historyFile.writeText(json)
+        historyTmpFile.writeText(json)
+        historyTmpFile.renameTo(historyFile)
     }
 
     fun updateAppLabelForPackage(packageName: String, newAppLabel: String) {
@@ -85,7 +89,8 @@ class NotificationHistoryStorage(private val context: Context) {
             }
         }
         val json = gson.toJson(updatedHistory)
-        historyFile.writeText(json)
+        historyTmpFile.writeText(json)
+        historyTmpFile.renameTo(historyFile)
     }
 
     fun clearHistory() {

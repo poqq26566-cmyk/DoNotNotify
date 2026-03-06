@@ -75,7 +75,9 @@ class NotificationBlockerService : NotificationListenerService() {
                 }
 
                 if (savedAppName == packageName) {
-                    notificationHistoryStorage.updateAppLabelForPackage(packageName, appLabel)
+                    historyExecutor.execute {
+                        notificationHistoryStorage.updateAppLabelForPackage(packageName, appLabel)
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to save app info for $packageName", e)
