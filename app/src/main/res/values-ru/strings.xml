@@ -97,7 +97,7 @@
     <string name="history_retention_days">Хранение истории (дней):</string>
     <string name="export_import_rules">Экспорт/Импорт правил</string>
     <string name="choose_action">Выберите действие</string>
-    <string name="support_this_app">Поддержать приложение</string>
+    <string name="support_this_app">Пожертвовать и поддержать</string>
     <string name="report_an_issue">Сообщить о проблеме</string>
     <string name="app_version">DoNotNotify v%s</string>
     <string name="status">Статус</string>

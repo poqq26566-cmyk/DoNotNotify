@@ -97,7 +97,7 @@
     <string name="history_retention_days">History Retention (Days):</string>
     <string name="export_import_rules">Export/Import Rules</string>
     <string name="choose_action">Choose an action</string>
-    <string name="support_this_app">Support This App</string>
+    <string name="support_this_app">Donate &amp; Support</string>
     <string name="report_an_issue">Report an Issue</string>
     <string name="app_version">DoNotNotify v%s</string>
     <string name="status">Status</string>

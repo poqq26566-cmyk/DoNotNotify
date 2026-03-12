@@ -1,0 +1,164 @@
+<resources>
+    <string name="app_name">DoNotNotify</string>
+
+    <!-- Tabs -->
+    <string name="tab_history">Historia (%d)</string>
+    <string name="tab_rules">Reguły (%d)</string>
+    <string name="tab_blocked">Zablokowane (%d)</string>
+
+    <!-- Common actions -->
+    <string name="cancel">Anuluj</string>
+    <string name="clear">Wyczyść</string>
+    <string name="close">Zamknij</string>
+    <string name="save">Zapisz</string>
+    <string name="delete">Usuń</string>
+    <string name="add">Dodaj</string>
+    <string name="ok">Ok</string>
+    <string name="open">Otwórz</string>
+    <string name="resume">Wznów</string>
+    <string name="stop">Zatrzymaj</string>
+    <string name="got_it">Rozumiem</string>
+    <string name="back">Wstecz</string>
+    <string name="export">Eksportuj</string>
+    <string name="import_rules">Importuj</string>
+    <string name="settings">Ustawienia</string>
+    <string name="about">O aplikacji</string>
+
+    <!-- Search -->
+    <string name="search">Szukaj</string>
+    <string name="clear_search">Wyczyść wyszukiwanie</string>
+    <string name="search_notifications">Szukaj powiadomień…</string>
+    <string name="search_apps">Szukaj aplikacji…</string>
+
+    <!-- History screen -->
+    <string name="no_notifications_yet">Brak powiadomień</string>
+    <string name="no_notifications_yet_desc">Powiadomienia z Twoich aplikacji pojawią się tutaj.</string>
+    <string name="no_results_found">Brak wyników</string>
+    <string name="no_results_found_desc">Żadne powiadomienie nie pasuje do Twojego wyszukiwania. Spróbuj innego hasła.</string>
+    <string name="clear_history">Wyczyść historię</string>
+    <string name="clear_history_title">Wyczyścić historię?</string>
+    <string name="clear_history_confirm">Czy na pewno chcesz wyczyścić całą historię powiadomień?</string>
+    <string name="stop_monitoring_title">Zatrzymać monitorowanie?</string>
+    <string name="stop_monitoring_confirm">Czy na pewno chcesz zatrzymać monitorowanie %s? Możesz wznowić monitorowanie później w sekcji Niemonitorowane aplikacje.</string>
+    <string name="stop_monitoring_app">Zatrzymaj monitorowanie %s</string>
+    <string name="unmonitored_apps">Niemonitorowane aplikacje (%d)</string>
+    <string name="ongoing_notification_cannot_block">To było trwałe powiadomienie. Jego zablokowanie może nie być możliwe.</string>
+    <string name="collapse">Zwiń</string>
+    <string name="expand">Rozwiń</string>
+
+    <!-- Notification labels in list cards -->
+    <string name="notification_title_prefix">Tytuł: %s</string>
+    <string name="notification_text_prefix">Treść: %s</string>
+
+    <!-- Ongoing notification icon -->
+    <string name="ongoing_notification">Trwałe powiadomienie</string>
+    <string name="time_limited_rule">Reguła z ograniczeniem czasowym</string>
+
+    <!-- Rules screen -->
+    <string name="no_rules_created">Brak reguł</string>
+    <string name="no_rules_created_desc">Twórz reguły, aby automatycznie blokować niechciane powiadomienia. Dotknij powiadomienia na karcie Historia, aby utworzyć regułę, lub przeglądaj gotowe reguły.</string>
+    <string name="rules_auto_block_desc">Wszystkie powiadomienia pasujące do poniższych reguł będą automatycznie blokowane.</string>
+    <string name="how_to_add_rule">Jak dodać nową regułę</string>
+    <string name="how_to_add_rule_desc">Aby utworzyć nową regułę:\n\n1. Przejdź do karty „Historia"\n2. Znajdź powiadomienie, które chcesz zablokować\n3. Dotknij powiadomienia\n4. Wybierz „Utwórz regułę" z opcji\n5. Dostosuj ustawienia reguły według potrzeb\n\nReguła pojawi się tutaj i będzie automatycznie blokować pasujące powiadomienia.</string>
+    <string name="add_new_rule">Dodaj nową regułę</string>
+    <string name="browse_prebuilt_rules">Przeglądaj gotowe reguły</string>
+    <string name="hits_count">Trafień: %d</string>
+    <string name="no_hits">Brak trafień</string>
+
+    <!-- Blocked screen -->
+    <string name="no_blocked_notifications">Brak zablokowanych powiadomień</string>
+    <string name="no_blocked_notifications_desc">Powiadomienia zablokowane przez Twoje reguły pojawią się tutaj. Utwórz reguły na karcie Reguły, aby zacząć blokować niechciane powiadomienia.</string>
+    <string name="clear_blocked_history">Wyczyść historię blokad</string>
+    <string name="clear_blocked_history_title">Wyczyścić historię blokad?</string>
+    <string name="clear_blocked_history_confirm">Czy na pewno chcesz wyczyścić całą historię zablokowanych powiadomień?</string>
+    <string name="ongoing_notification_partially_blocked">To było trwałe powiadomienie. Mogło nie zostać w pełni zablokowane.</string>
+    <string name="delete_blocked_notification">Usuń zablokowane powiadomienie</string>
+
+    <!-- Pre-built rules screen -->
+    <string name="prebuilt_rules">Gotowe reguły</string>
+    <string name="prebuilt_rules_desc">Dodaj wstępnie skonfigurowane reguły dla zainstalowanych aplikacji. Te reguły blokują typowe powiadomienia promocyjne i angażujące.</string>
+    <string name="no_rules_match_search">Brak reguł pasujących do wyszukiwania</string>
+    <string name="try_different_search">Spróbuj innego hasła wyszukiwania</string>
+    <string name="no_new_prebuilt_rules">Brak nowych gotowych reguł</string>
+    <string name="all_rules_added">Dodałeś już wszystkie dostępne reguły dla zainstalowanych aplikacji lub żadna obsługiwana aplikacja nie jest zainstalowana.</string>
+    <string name="blocks_notifications_containing">Blokuje powiadomienia zawierające:</string>
+    <string name="allows_only_notifications_containing">Zezwala tylko na powiadomienia zawierające:</string>
+    <string name="denylist">Lista blokowania</string>
+    <string name="allowlist">Lista zezwoleń</string>
+    <string name="unknown_app">Nieznana</string>
+
+    <!-- Enable notification listener screen -->
+    <string name="notifications_off">Powiadomienia wyłączone</string>
+    <string name="permission_required">Wymagane uprawnienie</string>
+    <string name="permission_required_desc">Ta aplikacja potrzebuje dostępu do Twoich powiadomień, aby je blokować. Włącz dostęp w ustawieniach urządzenia.</string>
+    <string name="enable_notification_access">Włącz dostęp do powiadomień</string>
+
+    <!-- Settings screen -->
+    <string name="history_retention_days">Przechowywanie historii (dni):</string>
+    <string name="export_import_rules">Eksportuj/Importuj reguły</string>
+    <string name="choose_action">Wybierz akcję</string>
+    <string name="support_this_app">Przekaż darowiznę &amp; wesprzyj</string>
+    <string name="report_an_issue">Zgłoś problem</string>
+    <string name="app_version">DoNotNotify v%s</string>
+    <string name="status">Status</string>
+    <string name="rules_exported_successfully">Reguły zostały pomyślnie wyeksportowane.</string>
+    <string name="failed_to_export_rules">Nie udało się wyeksportować reguł: %s</string>
+    <string name="successfully_imported_rules">Pomyślnie zaimportowano %d reguł.</string>
+    <string name="invalid_rules_file">Nieprawidłowy plik reguł: nie można przetworzyć reguł.</string>
+    <string name="invalid_rules_file_schema">Nieprawidłowy plik reguł: niezgodność schematu.</string>
+    <string name="failed_to_import_rules">Nie udało się zaimportować reguł: %s</string>
+
+    <!-- Rule dialogs -->
+    <string name="advanced_configuration">Zaawansowana konfiguracja</string>
+    <string name="enable_rule">Włącz regułę</string>
+    <string name="enable_time_limit">Włącz ograniczenie czasowe</string>
+    <string name="start_time">Czas rozpoczęcia:</string>
+    <string name="end_time">Czas zakończenia:</string>
+    <string name="title_filter_optional">Filtr tytułu (opcjonalny)</string>
+    <string name="text_filter_optional">Filtr treści (opcjonalny)</string>
+    <string name="save_rule">Zapisz regułę</string>
+    <string name="add_rule_title">Nowa reguła (%s)</string>
+    <string name="edit_rule_title">Edytuj regułę (%s)</string>
+    <string name="rule_for">Reguła dla %s</string>
+    <string name="blocked_notification_from">Zablokowane powiadomienie od %s</string>
+
+    <!-- Delete confirmation dialog -->
+    <string name="delete_item_title">Usunąć element?</string>
+    <string name="delete_item_confirm">Czy na pewno chcesz usunąć ten element?\n\n%s</string>
+
+    <!-- Notification details dialogs -->
+    <string name="notification_details">Szczegóły powiadomienia</string>
+    <string name="label_app">Aplikacja:</string>
+    <string name="label_title">Tytuł:</string>
+    <string name="label_text">Treść:</string>
+    <string name="label_time">Czas:</string>
+    <string name="create_rule">Utwórz regułę</string>
+    <string name="view_rule">Zobacz regułę</string>
+
+    <!-- Auto-added rules dialog -->
+    <string name="rules_added_automatically">Reguły dodane automatycznie</string>
+    <string name="rules_added_automatically_desc">Wykryliśmy następujące aplikacje na Twoim urządzeniu i dodaliśmy dla nich reguły blokowania:</string>
+    <string name="and_more">+ %d więcej</string>
+    <string name="do_not_show_again">Nie pokazuj ponownie</string>
+
+    <!-- About dialog -->
+    <string name="about_app">Aplikacja: %s</string>
+    <string name="about_version">Wersja: %s</string>
+    <string name="about_developer">Deweloper: %s</string>
+
+    <!-- Main screen -->
+    <string name="service_active">Usługa aktywna</string>
+    <string name="toast_service_enabled">Usługa powiadomień jest włączona</string>
+    <string name="toast_service_disabled">Usługa powiadomień jest wyłączona</string>
+    <string name="toast_rule_added">Reguła dodana</string>
+    <string name="toast_rule_deleted">Reguła usunięta</string>
+    <string name="toast_rule_updated">Reguła zaktualizowana</string>
+    <string name="toast_notification_deleted">Powiadomienie usunięte</string>
+    <string name="toast_history_cleared">Historia wyczyszczona</string>
+    <string name="toast_blocked_history_cleared">Historia blokad wyczyszczona</string>
+    <string name="toast_copied_to_clipboard">Skopiowano do schowka</string>
+    <string name="toast_failed_to_trigger">Nie udało się wykonać akcji</string>
+    <string name="toast_action_unavailable">Akcja powiadomienia jest już niedostępna</string>
+    <string name="toast_stopped_monitoring">Zatrzymano monitorowanie %s</string>
+    <string name="toast_resumed_monitoring">Wznowiono monitorowanie %s</string>
+</resources>
