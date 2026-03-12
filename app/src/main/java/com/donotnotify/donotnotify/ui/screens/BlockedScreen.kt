@@ -32,12 +32,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.SimpleNotification
 import com.donotnotify.donotnotify.ui.components.EmptyState
 
@@ -56,13 +58,13 @@ fun BlockedScreen(
             Card {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Clear Blocked History?",
+                        text = stringResource(R.string.clear_blocked_history_title),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Are you sure you want to clear all blocked notification history?",
+                        text = stringResource(R.string.clear_blocked_history_confirm),
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     Row(
@@ -70,13 +72,13 @@ fun BlockedScreen(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Button(onClick = { showClearBlockedHistoryDialog = false }, modifier = Modifier.padding(end = 8.dp)) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                         Button(onClick = {
                             onClearBlockedHistory()
                             showClearBlockedHistoryDialog = false
                         }) {
-                            Text("Clear")
+                            Text(stringResource(R.string.clear))
                         }
                     }
                 }
@@ -94,8 +96,8 @@ fun BlockedScreen(
             item {
                 EmptyState(
                     icon = Icons.Outlined.NotificationsOff,
-                    title = "No Blocked Notifications",
-                    description = "Notifications blocked by your rules will appear here. Create rules in the Rules tab to start blocking unwanted notifications."
+                    title = stringResource(R.string.no_blocked_notifications),
+                    description = stringResource(R.string.no_blocked_notifications_desc)
                 )
             }
         } else {
@@ -120,13 +122,13 @@ fun BlockedScreen(
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "Title: ${notification.title.orEmpty()}",
+                                text = stringResource(R.string.notification_title_prefix, notification.title.orEmpty()),
                                 style = MaterialTheme.typography.bodyMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "Text: ${notification.text.orEmpty()}",
+                                text = stringResource(R.string.notification_text_prefix, notification.text.orEmpty()),
                                 style = MaterialTheme.typography.bodyMedium,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
@@ -134,17 +136,17 @@ fun BlockedScreen(
                         }
                         if (notification.wasOngoing) {
                             IconButton(onClick = {
-                                Toast.makeText(context, "This was an ongoing notification. It may not have been fully blocked.", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(R.string.ongoing_notification_partially_blocked), Toast.LENGTH_LONG).show()
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Warning,
-                                    contentDescription = "Ongoing Notification",
+                                    contentDescription = stringResource(R.string.ongoing_notification),
                                     tint = MaterialTheme.colorScheme.error
                                 )
                             }
                         }
                         IconButton(onClick = { onDeleteNotificationClick(notification) }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete Blocked Notification")
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_blocked_notification))
                         }
                     }
                 }
@@ -153,7 +155,7 @@ fun BlockedScreen(
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp), horizontalArrangement = Arrangement.Center) {
-                    Button(onClick = { showClearBlockedHistoryDialog = true }) { Text("Clear Blocked History") }
+                    Button(onClick = { showClearBlockedHistoryDialog = true }) { Text(stringResource(R.string.clear_blocked_history)) }
                 }
             }
         }

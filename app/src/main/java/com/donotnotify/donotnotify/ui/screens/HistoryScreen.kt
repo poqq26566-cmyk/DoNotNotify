@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.donotnotify.donotnotify.AppInfoStorage
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.SimpleNotification
 import com.donotnotify.donotnotify.ui.components.EmptyState
 import kotlinx.coroutines.Dispatchers
@@ -134,13 +136,13 @@ fun HistoryScreen(
             Card {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Clear History?",
+                        text = stringResource(R.string.clear_history_title),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Are you sure you want to clear all notification history?",
+                        text = stringResource(R.string.clear_history_confirm),
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     Row(
@@ -148,13 +150,13 @@ fun HistoryScreen(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Button(onClick = { showClearHistoryDialog = false }, modifier = Modifier.padding(end = 8.dp)) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                         Button(onClick = {
                             onClearHistory()
                             showClearHistoryDialog = false
                         }) {
-                            Text("Clear")
+                            Text(stringResource(R.string.clear))
                         }
                     }
                 }
@@ -167,13 +169,13 @@ fun HistoryScreen(
             Card {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Stop Monitoring?",
+                        text = stringResource(R.string.stop_monitoring_title),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Are you sure you want to stop monitoring $appName? You can resume monitoring later from the Unmonitored Apps section.",
+                        text = stringResource(R.string.stop_monitoring_confirm, appName),
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                     Row(
@@ -181,13 +183,13 @@ fun HistoryScreen(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Button(onClick = { showStopMonitoringDialog = null }, modifier = Modifier.padding(end = 8.dp)) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                         Button(onClick = {
                             onStopMonitoring(packageName, appName)
                             showStopMonitoringDialog = null
                         }) {
-                            Text("Stop")
+                            Text(stringResource(R.string.stop))
                         }
                     }
                 }
@@ -207,11 +209,11 @@ fun HistoryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                placeholder = { Text("Search notifications...") },
+                placeholder = { Text(stringResource(R.string.search_notifications)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = stringResource(R.string.search)
                     )
                 },
                 trailingIcon = {
@@ -219,7 +221,7 @@ fun HistoryScreen(
                         IconButton(onClick = { searchQuery = "" }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear search"
+                                contentDescription = stringResource(R.string.clear_search)
                             )
                         }
                     }
@@ -238,16 +240,16 @@ fun HistoryScreen(
             item(contentType = "emptyMessage") {
                 EmptyState(
                     icon = Icons.Outlined.Inbox,
-                    title = "No Notifications Yet",
-                    description = "Notifications from your apps will appear here."
+                    title = stringResource(R.string.no_notifications_yet),
+                    description = stringResource(R.string.no_notifications_yet_desc)
                 )
             }
         } else if (filteredNotifications.isEmpty()) {
             item(contentType = "emptyMessage") {
                 EmptyState(
                     icon = Icons.Outlined.SearchOff,
-                    title = "No Results Found",
-                    description = "No notifications match your search query. Try a different search term."
+                    title = stringResource(R.string.no_results_found),
+                    description = stringResource(R.string.no_results_found_desc)
                 )
             }
         } else {
@@ -303,7 +305,7 @@ fun HistoryScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = if (expandedApps.contains(appName)) "Collapse" else "Expand"
+                                contentDescription = if (expandedApps.contains(appName)) stringResource(R.string.collapse) else stringResource(R.string.expand)
                             )
                         }
                     }
@@ -321,7 +323,7 @@ fun HistoryScreen(
                                     showStopMonitoringDialog = packageName to appName
                                 }
                             }) {
-                                Text("Stop monitoring $appName")
+                                Text(stringResource(R.string.stop_monitoring_app, appName))
                             }
                         }
                     }
@@ -338,13 +340,13 @@ fun HistoryScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f).padding(vertical = 12.dp)) {
                                     Text(
-                                        text = "Title: ${notification.title.orEmpty()}",
+                                        text = stringResource(R.string.notification_title_prefix, notification.title.orEmpty()),
                                         style = MaterialTheme.typography.bodyMedium,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        text = "Text: ${notification.text.orEmpty()}",
+                                        text = stringResource(R.string.notification_text_prefix, notification.text.orEmpty()),
                                         style = MaterialTheme.typography.bodyMedium,
                                         maxLines = 2,
                                         overflow = TextOverflow.Ellipsis
@@ -358,17 +360,17 @@ fun HistoryScreen(
                                 }
                                 if (notification.wasOngoing) {
                                     IconButton(onClick = {
-                                        Toast.makeText(context, "This was an ongoing notification. It may not be possible to block it.", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.ongoing_notification_cannot_block), Toast.LENGTH_LONG).show()
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Warning,
-                                            contentDescription = "Ongoing Notification",
+                                            contentDescription = stringResource(R.string.ongoing_notification),
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                     }
                                 }
                                 IconButton(onClick = { onDeleteNotification(notification) }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
                                 }
                             }
                         }
@@ -378,11 +380,11 @@ fun HistoryScreen(
 
             item(contentType = "clearHistory") {
                 Row(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp), horizontalArrangement = Arrangement.Center) {
-                    Button(onClick = { showClearHistoryDialog = true }) { Text("Clear History") }
+                    Button(onClick = { showClearHistoryDialog = true }) { Text(stringResource(R.string.clear_history)) }
                 }
             }
         }
-        
+
         if (unmonitoredApps.isNotEmpty()) {
             item(contentType = "unmonitoredHeader") {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
@@ -394,14 +396,14 @@ fun HistoryScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Unmonitored Apps (${unmonitoredApps.size})",
+                        text = stringResource(R.string.unmonitored_apps, unmonitoredApps.size),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(onClick = { isUnmonitoredAppsExpanded = !isUnmonitoredAppsExpanded }) {
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = if (isUnmonitoredAppsExpanded) "Collapse" else "Expand"
+                            contentDescription = if (isUnmonitoredAppsExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand)
                         )
                     }
                 }
@@ -428,7 +430,7 @@ fun HistoryScreen(
                             style = MaterialTheme.typography.bodyMedium
                         )
                         TextButton(onClick = { onResumeMonitoring(packageName) }) {
-                            Text("Resume")
+                            Text(stringResource(R.string.resume))
                         }
                     }
                 }

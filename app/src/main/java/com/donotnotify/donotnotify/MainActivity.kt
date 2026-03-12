@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.donotnotify.donotnotify.ui.components.AddRuleDialog
@@ -218,7 +219,7 @@ class MainActivity : ComponentActivity() {
                     val updatedRules = rules + rule
                     ruleStorage.saveRules(updatedRules)
                     rules = updatedRules
-                    Toast.makeText(context, "Rule added", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_rule_added), Toast.LENGTH_SHORT).show()
                 }
             )
         } else if (isServiceEnabled) {
@@ -236,12 +237,12 @@ class MainActivity : ComponentActivity() {
                     notificationHistoryStorage.clearHistory()
                     appInfoStorage.clearAllAppInfo()
                     pastNotifications = emptyList()
-                    Toast.makeText(context, "History cleared", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_history_cleared), Toast.LENGTH_SHORT).show()
                 },
                 onClearBlockedHistory = {
                     blockedNotificationHistoryStorage.clearHistory()
                     blockedNotifications = emptyList()
-                    Toast.makeText(context, "Blocked history cleared", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_blocked_history_cleared), Toast.LENGTH_SHORT).show()
                 },
                 onRuleClick = { rule -> ruleToEdit = rule },
                 onDeleteRuleClick = { rule -> ruleToDelete = rule },
@@ -249,7 +250,7 @@ class MainActivity : ComponentActivity() {
                 onDeleteHistoryNotificationClick = { notification ->
                     notificationHistoryStorage.deleteNotification(notification)
                     pastNotifications = notificationHistoryStorage.getHistory()
-                    Toast.makeText(context, "Notification deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_notification_deleted), Toast.LENGTH_SHORT).show()
                 },
                 isServiceEnabled = isServiceEnabled, // Pass isServiceEnabled
                 onSettingsClick = { showSettingsScreen = true },
@@ -260,12 +261,12 @@ class MainActivity : ComponentActivity() {
                     notificationHistoryStorage.deleteNotificationsFromPackage(packageName)
                     pastNotifications = notificationHistoryStorage.getHistory()
                     appInfoStorage.deleteAppInfo(packageName)
-                    Toast.makeText(context, "Stopped monitoring $appName", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_stopped_monitoring, appName), Toast.LENGTH_SHORT).show()
                 },
                 onResumeMonitoring = { packageName ->
                     unmonitoredAppsStorage.removeApp(packageName)
                     unmonitoredApps = unmonitoredAppsStorage.getUnmonitoredApps()
-                    Toast.makeText(context, "Resumed monitoring $packageName", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_resumed_monitoring, packageName), Toast.LENGTH_SHORT).show()
                 }
             )
         } else {
@@ -281,7 +282,7 @@ class MainActivity : ComponentActivity() {
                     ruleStorage.saveRules(updatedRules)
                     rules = updatedRules
                     notificationToShowAddDialog = null
-                    Toast.makeText(context, "Rule added", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_rule_added), Toast.LENGTH_SHORT).show()
                     coroutineScope.launch { pagerState.animateScrollToPage(1) }
                 }
             )
@@ -340,16 +341,16 @@ class MainActivity : ComponentActivity() {
                             if (android.os.Build.VERSION.SDK_INT >= 34) {
                                 options.setPendingIntentBackgroundActivityStartMode(android.app.ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS)
                             }
-                            
+
                             val actionIntent = Intent()
                             actionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            
+
                             intent.send(context, 0, actionIntent, null, null, null, options.toBundle())
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Failed to trigger action", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.toast_failed_to_trigger), Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(context, "Notification action is no longer available", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.toast_action_unavailable), Toast.LENGTH_SHORT).show()
                     }
                     notificationToShowHistoryDetailsDialog = null
                 },
@@ -373,7 +374,7 @@ class MainActivity : ComponentActivity() {
                     ruleStorage.saveRules(updatedRules)
                     rules = updatedRules
                     ruleToEdit = null
-                    Toast.makeText(context, "Rule updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_rule_updated), Toast.LENGTH_SHORT).show()
                     coroutineScope.launch { pagerState.animateScrollToPage(1) }
                 },
                 onDeleteRule = {
@@ -381,7 +382,7 @@ class MainActivity : ComponentActivity() {
                     ruleStorage.saveRules(updatedRules)
                     rules = updatedRules
                     ruleToEdit = null
-                    Toast.makeText(context, "Rule deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_rule_deleted), Toast.LENGTH_SHORT).show()
                     coroutineScope.launch { pagerState.animateScrollToPage(1) }
                 }
             )
@@ -389,27 +390,27 @@ class MainActivity : ComponentActivity() {
 
         ruleToDelete?.let { rule ->
             DeleteConfirmationDialog(
-                itemName = "Rule for ${rule.appName}",
+                itemName = context.getString(R.string.rule_for, rule.appName.orEmpty()),
                 onDismiss = { ruleToDelete = null },
                 onConfirm = {
                     val updatedRules = rules - rule
                     ruleStorage.saveRules(updatedRules)
                     rules = updatedRules
                     ruleToDelete = null
-                    Toast.makeText(context, "Rule deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_rule_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }
 
         notificationToDelete?.let { notification ->
             DeleteConfirmationDialog(
-                itemName = "Blocked notification from ${notification.appLabel}",
+                itemName = context.getString(R.string.blocked_notification_from, notification.appLabel.orEmpty()),
                 onDismiss = { notificationToDelete = null },
                 onConfirm = {
                     blockedNotificationHistoryStorage.deleteNotification(notification)
                     blockedNotifications = blockedNotificationHistoryStorage.getHistory()
                     notificationToDelete = null
-                    Toast.makeText(context, "Notification deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.toast_notification_deleted), Toast.LENGTH_SHORT).show()
                 }
             )
         }
@@ -438,8 +439,11 @@ class MainActivity : ComponentActivity() {
     ) {
         val context = LocalContext.current // Get context inside Composable
         val coroutineScope = rememberCoroutineScope()
-        val tabTitles =
-            listOf("History (${pastNotifications.size})", "Rules (${rules.count { it.isEnabled }})", "Blocked (${blockedNotifications.size})")
+        val tabTitles = listOf(
+            stringResource(R.string.tab_history, pastNotifications.size),
+            stringResource(R.string.tab_rules, rules.count { it.isEnabled }),
+            stringResource(R.string.tab_blocked, blockedNotifications.size)
+        )
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -449,19 +453,21 @@ class MainActivity : ComponentActivity() {
                     title = { Text("DoNotNotify") },
                     actions = {
                         IconButton(onClick = {
-                            val status =
-                                if (isServiceEnabled) "Notification service is enabled" else "Notification service is disabled"
+                            val status = if (isServiceEnabled)
+                                context.getString(R.string.toast_service_enabled)
+                            else
+                                context.getString(R.string.toast_service_disabled)
                             Toast.makeText(context, status, Toast.LENGTH_SHORT).show()
                         }) {
                             Icon(
                                 Icons.Default.CheckCircle,
-                                contentDescription = "Service Active",
+                                contentDescription = stringResource(R.string.service_active),
                             )
                         }
                         IconButton(onClick = onSettingsClick) {
                             Icon(
                                 Icons.Default.Settings,
-                                contentDescription = "Settings"
+                                contentDescription = stringResource(R.string.settings)
                             )
                         }
                     }

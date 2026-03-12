@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.SimpleNotification
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,16 +50,16 @@ fun HistoryNotificationDetailsDialog(
                     .verticalScroll(scrollState)
             ) {
                 Text(
-                    "Notification Details",
+                    stringResource(R.string.notification_details),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                DetailRow("App:", notification.appLabel ?: notification.packageName.orEmpty())
-                DetailRow("Title:", notification.title.orEmpty())
-                DetailRow("Text:", notification.text.orEmpty())
-                DetailRow("Time:", dateFormat.format(Date(notification.timestamp)))
-                
+                DetailRow(stringResource(R.string.label_app), notification.appLabel ?: notification.packageName.orEmpty())
+                DetailRow(stringResource(R.string.label_title), notification.title.orEmpty())
+                DetailRow(stringResource(R.string.label_text), notification.text.orEmpty())
+                DetailRow(stringResource(R.string.label_time), dateFormat.format(Date(notification.timestamp)))
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +73,7 @@ fun HistoryNotificationDetailsDialog(
                             .weight(1f)
                             .padding(end = 8.dp)
                     ) {
-                        Text("Open")
+                        Text(stringResource(R.string.open))
                     }
                     Button(
                         onClick = onCreateRule,
@@ -79,17 +81,17 @@ fun HistoryNotificationDetailsDialog(
                             .weight(1f)
                             .padding(start = 8.dp)
                     ) {
-                        Text("Create Rule")
+                        Text(stringResource(R.string.create_rule))
                     }
                 }
-                
+
                 Button(
                     onClick = onDismiss,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                 ) {
-                    Text("Close")
+                    Text(stringResource(R.string.close))
                 }
             }
         }
@@ -100,6 +102,7 @@ fun HistoryNotificationDetailsDialog(
 @Composable
 private fun DetailRow(label: String, value: String) {
     val context = LocalContext.current
+    val copiedMsg = stringResource(R.string.toast_copied_to_clipboard)
     Row(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(label, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(0.25f))
         Text(
@@ -112,7 +115,7 @@ private fun DetailRow(label: String, value: String) {
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText(label, value)
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, copiedMsg, Toast.LENGTH_SHORT).show()
                     }
                 )
         )

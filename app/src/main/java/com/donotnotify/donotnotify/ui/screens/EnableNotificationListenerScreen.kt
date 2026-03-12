@@ -18,10 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donotnotify.donotnotify.R
 
 @Composable
 fun EnableNotificationListenerScreen(onEnableClick: () -> Unit) {
@@ -44,23 +46,23 @@ fun EnableNotificationListenerScreen(onEnableClick: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.NotificationsOff,
-                    contentDescription = "Notifications Off",
+                    contentDescription = stringResource(R.string.notifications_off),
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Permission Required",
+                    text = stringResource(R.string.permission_required),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "This app needs access to your notifications to block them. Please enable the access in your device settings.",
+                    text = stringResource(R.string.permission_required_desc),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onEnableClick) {
-                    Text("Enable Notification Access")
+                    Text(stringResource(R.string.enable_notification_access))
                 }
             }
         }

@@ -1,0 +1,164 @@
+<resources>
+    <string name="app_name">DoNotNotify</string>
+
+    <!-- Tabs -->
+    <string name="tab_history">История (%d)</string>
+    <string name="tab_rules">Правила (%d)</string>
+    <string name="tab_blocked">Заблокированные (%d)</string>
+
+    <!-- Common actions -->
+    <string name="cancel">Отмена</string>
+    <string name="clear">Очистить</string>
+    <string name="close">Закрыть</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="ok">Ок</string>
+    <string name="open">Открыть</string>
+    <string name="resume">Возобновить</string>
+    <string name="stop">Остановить</string>
+    <string name="got_it">Понятно</string>
+    <string name="back">Назад</string>
+    <string name="export">Экспорт</string>
+    <string name="import_rules">Импорт</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О приложении</string>
+
+    <!-- Search -->
+    <string name="search">Поиск</string>
+    <string name="clear_search">Очистить поиск</string>
+    <string name="search_notifications">Поиск уведомлений…</string>
+    <string name="search_apps">Поиск приложений…</string>
+
+    <!-- History screen -->
+    <string name="no_notifications_yet">Нет уведомлений</string>
+    <string name="no_notifications_yet_desc">Уведомления из ваших приложений появятся здесь.</string>
+    <string name="no_results_found">Ничего не найдено</string>
+    <string name="no_results_found_desc">Ни одно уведомление не соответствует вашему запросу. Попробуйте другой термин.</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="clear_history_title">Очистить историю?</string>
+    <string name="clear_history_confirm">Вы уверены, что хотите очистить всю историю уведомлений?</string>
+    <string name="stop_monitoring_title">Остановить мониторинг?</string>
+    <string name="stop_monitoring_confirm">Вы уверены, что хотите остановить мониторинг %s? Вы можете возобновить мониторинг позже в разделе «Приложения без мониторинга».</string>
+    <string name="stop_monitoring_app">Остановить мониторинг %s</string>
+    <string name="unmonitored_apps">Приложения без мониторинга (%d)</string>
+    <string name="ongoing_notification_cannot_block">Это было постоянное уведомление. Его может быть невозможно заблокировать.</string>
+    <string name="collapse">Свернуть</string>
+    <string name="expand">Развернуть</string>
+
+    <!-- Notification labels in list cards -->
+    <string name="notification_title_prefix">Заголовок: %s</string>
+    <string name="notification_text_prefix">Текст: %s</string>
+
+    <!-- Ongoing notification icon -->
+    <string name="ongoing_notification">Постоянное уведомление</string>
+    <string name="time_limited_rule">Правило с ограничением по времени</string>
+
+    <!-- Rules screen -->
+    <string name="no_rules_created">Правила не созданы</string>
+    <string name="no_rules_created_desc">Создайте правила для автоматической блокировки нежелательных уведомлений. Нажмите на уведомление на вкладке «История», чтобы создать правило, или просмотрите готовые правила.</string>
+    <string name="rules_auto_block_desc">Все уведомления, соответствующие правилам ниже, будут автоматически заблокированы.</string>
+    <string name="how_to_add_rule">Как добавить новое правило</string>
+    <string name="how_to_add_rule_desc">Чтобы создать новое правило:\n\n1. Перейдите на вкладку «История»\n2. Найдите уведомление, которое хотите заблокировать\n3. Нажмите на уведомление\n4. Выберите «Создать правило» в параметрах\n5. При необходимости настройте параметры правила\n\nПравило появится здесь и будет автоматически блокировать соответствующие уведомления.</string>
+    <string name="add_new_rule">Добавить новое правило</string>
+    <string name="browse_prebuilt_rules">Просмотр готовых правил</string>
+    <string name="hits_count">Совпадений: %d</string>
+    <string name="no_hits">Нет совпадений</string>
+
+    <!-- Blocked screen -->
+    <string name="no_blocked_notifications">Нет заблокированных уведомлений</string>
+    <string name="no_blocked_notifications_desc">Уведомления, заблокированные вашими правилами, появятся здесь. Создайте правила на вкладке «Правила», чтобы начать блокировать нежелательные уведомления.</string>
+    <string name="clear_blocked_history">Очистить историю блокировок</string>
+    <string name="clear_blocked_history_title">Очистить историю блокировок?</string>
+    <string name="clear_blocked_history_confirm">Вы уверены, что хотите очистить всю историю заблокированных уведомлений?</string>
+    <string name="ongoing_notification_partially_blocked">Это было постоянное уведомление. Оно могло быть заблокировано не полностью.</string>
+    <string name="delete_blocked_notification">Удалить заблокированное уведомление</string>
+
+    <!-- Pre-built rules screen -->
+    <string name="prebuilt_rules">Готовые правила</string>
+    <string name="prebuilt_rules_desc">Добавьте предварительно настроенные правила для установленных приложений. Эти правила блокируют типичные рекламные и вовлекающие уведомления.</string>
+    <string name="no_rules_match_search">Нет правил, соответствующих поиску</string>
+    <string name="try_different_search">Попробуйте другой поисковый запрос</string>
+    <string name="no_new_prebuilt_rules">Нет новых готовых правил</string>
+    <string name="all_rules_added">Вы уже добавили все доступные правила для установленных приложений, или ни одно поддерживаемое приложение не установлено.</string>
+    <string name="blocks_notifications_containing">Блокирует уведомления, содержащие:</string>
+    <string name="allows_only_notifications_containing">Разрешает только уведомления, содержащие:</string>
+    <string name="denylist">Список блокировки</string>
+    <string name="allowlist">Список разрешений</string>
+    <string name="unknown_app">Неизвестно</string>
+
+    <!-- Enable notification listener screen -->
+    <string name="notifications_off">Уведомления отключены</string>
+    <string name="permission_required">Требуется разрешение</string>
+    <string name="permission_required_desc">Этому приложению необходим доступ к вашим уведомлениям для их блокировки. Пожалуйста, включите доступ в настройках устройства.</string>
+    <string name="enable_notification_access">Включить доступ к уведомлениям</string>
+
+    <!-- Settings screen -->
+    <string name="history_retention_days">Хранение истории (дней):</string>
+    <string name="export_import_rules">Экспорт/Импорт правил</string>
+    <string name="choose_action">Выберите действие</string>
+    <string name="support_this_app">Поддержать приложение</string>
+    <string name="report_an_issue">Сообщить о проблеме</string>
+    <string name="app_version">DoNotNotify v%s</string>
+    <string name="status">Статус</string>
+    <string name="rules_exported_successfully">Правила успешно экспортированы.</string>
+    <string name="failed_to_export_rules">Не удалось экспортировать правила: %s</string>
+    <string name="successfully_imported_rules">Успешно импортировано %d правил.</string>
+    <string name="invalid_rules_file">Недопустимый файл правил: не удалось разобрать правила.</string>
+    <string name="invalid_rules_file_schema">Недопустимый файл правил: несоответствие схемы.</string>
+    <string name="failed_to_import_rules">Не удалось импортировать правила: %s</string>
+
+    <!-- Rule dialogs -->
+    <string name="advanced_configuration">Расширенная настройка</string>
+    <string name="enable_rule">Включить правило</string>
+    <string name="enable_time_limit">Включить ограничение по времени</string>
+    <string name="start_time">Время начала:</string>
+    <string name="end_time">Время окончания:</string>
+    <string name="title_filter_optional">Фильтр заголовка (необязательно)</string>
+    <string name="text_filter_optional">Фильтр текста (необязательно)</string>
+    <string name="save_rule">Сохранить правило</string>
+    <string name="add_rule_title">Новое правило (%s)</string>
+    <string name="edit_rule_title">Изменить правило (%s)</string>
+    <string name="rule_for">Правило для %s</string>
+    <string name="blocked_notification_from">Заблокированное уведомление от %s</string>
+
+    <!-- Delete confirmation dialog -->
+    <string name="delete_item_title">Удалить элемент?</string>
+    <string name="delete_item_confirm">Вы уверены, что хотите удалить этот элемент?\n\n%s</string>
+
+    <!-- Notification details dialogs -->
+    <string name="notification_details">Сведения об уведомлении</string>
+    <string name="label_app">Приложение:</string>
+    <string name="label_title">Заголовок:</string>
+    <string name="label_text">Текст:</string>
+    <string name="label_time">Время:</string>
+    <string name="create_rule">Создать правило</string>
+    <string name="view_rule">Просмотр правила</string>
+
+    <!-- Auto-added rules dialog -->
+    <string name="rules_added_automatically">Правила добавлены автоматически</string>
+    <string name="rules_added_automatically_desc">Мы обнаружили следующие приложения на вашем устройстве и добавили для них правила блокировки:</string>
+    <string name="and_more">+ ещё %d</string>
+    <string name="do_not_show_again">Больше не показывать</string>
+
+    <!-- About dialog -->
+    <string name="about_app">Приложение: %s</string>
+    <string name="about_version">Версия: %s</string>
+    <string name="about_developer">Разработчик: %s</string>
+
+    <!-- Main screen -->
+    <string name="service_active">Служба активна</string>
+    <string name="toast_service_enabled">Служба уведомлений включена</string>
+    <string name="toast_service_disabled">Служба уведомлений отключена</string>
+    <string name="toast_rule_added">Правило добавлено</string>
+    <string name="toast_rule_deleted">Правило удалено</string>
+    <string name="toast_rule_updated">Правило обновлено</string>
+    <string name="toast_notification_deleted">Уведомление удалено</string>
+    <string name="toast_history_cleared">История очищена</string>
+    <string name="toast_blocked_history_cleared">История блокировок очищена</string>
+    <string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
+    <string name="toast_failed_to_trigger">Не удалось выполнить действие</string>
+    <string name="toast_action_unavailable">Действие уведомления больше недоступно</string>
+    <string name="toast_stopped_monitoring">Мониторинг %s остановлен</string>
+    <string name="toast_resumed_monitoring">Мониторинг %s возобновлён</string>
+</resources>

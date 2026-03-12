@@ -1,6 +1,5 @@
 package com.donotnotify.donotnotify.ui.components
 
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,7 +9,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.donotnotify.donotnotify.R
 
 @Composable
 fun AboutDialog(onDismiss: () -> Unit) {
@@ -27,17 +28,17 @@ fun AboutDialog(onDismiss: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("About") },
+        title = { Text(stringResource(R.string.about)) },
         text = {
             Column {
-                Text("App: $appName")
-                Text("Version: $appVersion")
-                Text("Developer: $developerEmail")
+                Text(stringResource(R.string.about_app, appName))
+                Text(stringResource(R.string.about_version, appVersion))
+                Text(stringResource(R.string.about_developer, developerEmail))
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Close")
+                Text(stringResource(R.string.close))
             }
         }
     )

@@ -39,9 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.donotnotify.donotnotify.BlockerRule
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.RuleStorage
 import com.donotnotify.donotnotify.ui.components.AboutDialog
 import com.google.gson.ExclusionStrategy
@@ -92,9 +94,9 @@ fun SettingsScreen(
                 context.contentResolver.openOutputStream(it)?.use { outputStream ->
                     outputStream.write(json.toByteArray())
                 }
-                exportImportMessage = "Rules exported successfully."
+                exportImportMessage = context.getString(R.string.rules_exported_successfully)
             } catch (e: Exception) {
-                exportImportMessage = "Failed to export rules: ${e.message}"
+                exportImportMessage = context.getString(R.string.failed_to_export_rules, e.message ?: "")
             }
         }
     }
@@ -127,16 +129,16 @@ fun SettingsScreen(
                                 currentRules.addAll(newRules)
                                 ruleStorage.saveRules(currentRules)
                             }
-                            exportImportMessage = "Successfully imported ${newRules.size} rules."
+                            exportImportMessage = context.getString(R.string.successfully_imported_rules, newRules.size)
                         } else {
-                            exportImportMessage = "Invalid rules file: Could not parse rules."
+                            exportImportMessage = context.getString(R.string.invalid_rules_file)
                         }
                     } catch (e: JsonSyntaxException) {
-                        exportImportMessage = "Invalid rules file: Schema mismatch."
+                        exportImportMessage = context.getString(R.string.invalid_rules_file_schema)
                     }
                 }
             } catch (e: Exception) {
-                exportImportMessage = "Failed to import rules: ${e.message}"
+                exportImportMessage = context.getString(R.string.failed_to_import_rules, e.message ?: "")
             }
         }
     }
@@ -150,14 +152,14 @@ fun SettingsScreen(
     if (showExportImportDialog) {
         AlertDialog(
             onDismissRequest = { showExportImportDialog = false },
-            title = { Text("Export/Import Rules") },
-            text = { Text("Choose an action") },
+            title = { Text(stringResource(R.string.export_import_rules)) },
+            text = { Text(stringResource(R.string.choose_action)) },
             confirmButton = {
                 TextButton(onClick = {
                     showExportImportDialog = false
                     exportLauncher.launch("donotnotify_rules.json")
                 }) {
-                    Text("Export")
+                    Text(stringResource(R.string.export))
                 }
             },
             dismissButton = {
@@ -165,7 +167,7 @@ fun SettingsScreen(
                     showExportImportDialog = false
                     importLauncher.launch(arrayOf("application/json"))
                 }) {
-                    Text("Import")
+                    Text(stringResource(R.string.import_rules))
                 }
             }
         )
@@ -174,11 +176,11 @@ fun SettingsScreen(
     if (exportImportMessage != null) {
         AlertDialog(
             onDismissRequest = { exportImportMessage = null },
-            title = { Text("Status") },
+            title = { Text(stringResource(R.string.status)) },
             text = { Text(exportImportMessage!!) },
             confirmButton = {
                 TextButton(onClick = { exportImportMessage = null }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )
@@ -187,10 +189,10 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -212,7 +214,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "History Retention (Days):",
+                    text = stringResource(R.string.history_retention_days),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -239,7 +241,7 @@ fun SettingsScreen(
                     .clickable { showExportImportDialog = true }
                     .padding(16.dp),
             ) {
-                Text("Export/Import Rules", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.export_import_rules), style = MaterialTheme.typography.bodyLarge)
             }
             HorizontalDivider()
 
@@ -253,7 +255,7 @@ fun SettingsScreen(
                     }
                     .padding(16.dp),
             ) {
-                Text("Support This App", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.support_this_app), style = MaterialTheme.typography.bodyLarge)
             }
             HorizontalDivider()
 
@@ -267,7 +269,7 @@ fun SettingsScreen(
                     }
                     .padding(16.dp),
             ) {
-                Text("Report an Issue", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.report_an_issue), style = MaterialTheme.typography.bodyLarge)
             }
             HorizontalDivider()
 
@@ -285,7 +287,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "DoNotNotify v$versionName",
+                    text = stringResource(R.string.app_version, versionName),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

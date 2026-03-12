@@ -10,10 +10,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.donotnotify.donotnotify.R
 
 @Composable
 fun DeleteConfirmationDialog(
@@ -25,13 +27,13 @@ fun DeleteConfirmationDialog(
         Card {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Delete Item?",
+                    text = stringResource(R.string.delete_item_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Are you sure you want to delete this item?\n\n$itemName",
+                    text = stringResource(R.string.delete_item_confirm, itemName),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 Row(
@@ -39,10 +41,10 @@ fun DeleteConfirmationDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(onClick = onDismiss, modifier = Modifier.padding(end = 8.dp)) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                     Button(onClick = onConfirm) {
-                        Text("Delete")
+                        Text(stringResource(R.string.delete))
                     }
                 }
             }

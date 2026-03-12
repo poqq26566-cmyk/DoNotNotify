@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ import androidx.compose.ui.window.Dialog
 import com.donotnotify.donotnotify.AdvancedRuleConfig
 import com.donotnotify.donotnotify.BlockerRule
 import com.donotnotify.donotnotify.MatchType
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.RuleType
 import com.donotnotify.donotnotify.SimpleNotification
 import java.util.Locale
@@ -81,12 +83,12 @@ fun AdvancedRuleConfigDialog(
 ) {
     var config by remember { mutableStateOf(initialConfig) }
     var isEnabled by remember { mutableStateOf(initialIsEnabled) }
-    
+
     Dialog(onDismissRequest = onDismiss) {
         Card {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    "Advanced Configuration",
+                    stringResource(R.string.advanced_configuration),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -100,7 +102,7 @@ fun AdvancedRuleConfigDialog(
                         checked = isEnabled,
                         onCheckedChange = { isEnabled = it }
                     )
-                    Text("Enable Rule")
+                    Text(stringResource(R.string.enable_rule))
                 }
 
                 Row(
@@ -113,12 +115,12 @@ fun AdvancedRuleConfigDialog(
                             config = config.copy(isTimeLimitEnabled = it)
                         }
                     )
-                    Text("Enable Time Limit")
+                    Text(stringResource(R.string.enable_time_limit))
                 }
 
                 if (config.isTimeLimitEnabled) {
                     TimeSelector(
-                        label = "Start Time:",
+                        label = stringResource(R.string.start_time),
                         hour = config.startTimeHour,
                         minute = config.startTimeMinute,
                         onTimeSelected = { h, m ->
@@ -126,7 +128,7 @@ fun AdvancedRuleConfigDialog(
                         }
                     )
                     TimeSelector(
-                        label = "End Time:",
+                        label = stringResource(R.string.end_time),
                         hour = config.endTimeHour,
                         minute = config.endTimeMinute,
                         onTimeSelected = { h, m ->
@@ -142,11 +144,11 @@ fun AdvancedRuleConfigDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = { onSave(config, isEnabled) }) {
-                        Text("Save")
+                        Text(stringResource(R.string.save))
                     }
                 }
             }
@@ -190,7 +192,7 @@ private fun RuleDialog(
 
     if (showDeleteConfirmationDialog) {
         DeleteConfirmationDialog(
-            itemName = "Rule for ${initialRule.appName}",
+            itemName = stringResource(R.string.rule_for, initialRule.appName.orEmpty()),
             onDismiss = { showDeleteConfirmationDialog = false },
             onConfirm = {
                 onDelete?.invoke() // Call the actual delete lambda passed from EditRuleDialog
@@ -236,7 +238,7 @@ private fun RuleDialog(
                 TextField(
                     value = titleFilter,
                     onValueChange = { titleFilter = it },
-                    label = { Text("Title Filter (Optional)") },
+                    label = { Text(stringResource(R.string.title_filter_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 SingleChoiceSegmentedButtonRow(
@@ -260,7 +262,7 @@ private fun RuleDialog(
                 TextField(
                     value = textFilter,
                     onValueChange = { textFilter = it },
-                    label = { Text("Text Filter (Optional)") },
+                    label = { Text(stringResource(R.string.text_filter_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 SingleChoiceSegmentedButtonRow(
@@ -285,7 +287,7 @@ private fun RuleDialog(
                     onClick = { showAdvancedDialog = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Advanced Configuration")
+                    Text(stringResource(R.string.advanced_configuration))
                 }
 
                 Row(
@@ -296,12 +298,12 @@ private fun RuleDialog(
                 ) {
                     if (isEditMode && onDelete != null) {
                         Button(onClick = { showDeleteConfirmationDialog = true }) { // Changed to show confirmation dialog
-                            Text("Delete")
+                            Text(stringResource(R.string.delete))
                         }
                     }
                     Row {
                         Button(onClick = onDismiss) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(onClick = {
@@ -316,7 +318,7 @@ private fun RuleDialog(
                             )
                             onSave(newRule)
                         }) {
-                            Text(if (isEditMode) "Save" else "Save Rule")
+                            Text(if (isEditMode) stringResource(R.string.save) else stringResource(R.string.save_rule))
                         }
                     }
                 }
@@ -346,7 +348,7 @@ fun AddRuleDialog(
     }
 
     RuleDialog(
-        title = "Add New Rule (${initialRule.appName})",
+        title = stringResource(R.string.add_rule_title, initialRule.appName.orEmpty()),
         initialRule = initialRule,
         isEditMode = false,
         onDismiss = onDismiss,
@@ -366,7 +368,7 @@ fun EditRuleDialog(
     onDeleteRule: (BlockerRule) -> Unit
 ) {
     RuleDialog(
-        title = "Edit Rule (${rule.appName})",
+        title = stringResource(R.string.edit_rule_title, rule.appName.orEmpty()),
         initialRule = rule,
         isEditMode = true,
         onDismiss = onDismiss,

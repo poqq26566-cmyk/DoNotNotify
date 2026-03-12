@@ -9,20 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.donotnotify.donotnotify.R
 
 @Composable
 fun AutoAddedRulesDialog(
@@ -38,17 +34,17 @@ fun AutoAddedRulesDialog(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Rules Added Automatically",
+                    text = stringResource(R.string.rules_added_automatically),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "We found the following apps on your device and added blocker rules for them:",
+                    text = stringResource(R.string.rules_added_automatically_desc),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 // Show up to 5 apps, then "+ X more"
                 val displayList = if (addedApps.size > 5) addedApps.take(5) else addedApps
                 displayList.forEach { appName ->
@@ -60,7 +56,7 @@ fun AutoAddedRulesDialog(
                 }
                 if (addedApps.size > 5) {
                     Text(
-                        text = "+ ${addedApps.size - 5} more",
+                        text = stringResource(R.string.and_more, addedApps.size - 5),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -73,10 +69,10 @@ fun AutoAddedRulesDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onDoNotShowAgain) {
-                        Text("Do Not Show Again")
+                        Text(stringResource(R.string.do_not_show_again))
                     }
                     Button(onClick = onDismiss) {
-                        Text("Ok")
+                        Text(stringResource(R.string.ok))
                     }
                 }
             }

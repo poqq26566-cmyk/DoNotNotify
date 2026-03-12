@@ -33,12 +33,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.donotnotify.donotnotify.BlockerRule
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.RuleType
 import com.donotnotify.donotnotify.ui.components.EmptyState
 
@@ -54,21 +56,11 @@ fun RulesScreen(
     if (showAddRuleDialog) {
         AlertDialog(
             onDismissRequest = { showAddRuleDialog = false },
-            title = { Text("How to Add a New Rule") },
-            text = {
-                Text(
-                    "To create a new rule:\n\n" +
-                    "1. Switch to the \"History\" tab\n" +
-                    "2. Find a notification you want to block\n" +
-                    "3. Tap on the notification\n" +
-                    "4. Select \"Create Rule\" from the options\n" +
-                    "5. Customize the rule settings as needed\n\n" +
-                    "The rule will then appear here and automatically block matching notifications."
-                )
-            },
+            title = { Text(stringResource(R.string.how_to_add_rule)) },
+            text = { Text(stringResource(R.string.how_to_add_rule_desc)) },
             confirmButton = {
                 TextButton(onClick = { showAddRuleDialog = false }) {
-                    Text("Got it")
+                    Text(stringResource(R.string.got_it))
                 }
             }
         )
@@ -87,16 +79,16 @@ fun RulesScreen(
             item {
                 EmptyState(
                     icon = Icons.AutoMirrored.Outlined.Rule,
-                    title = "No Rules Created",
-                    description = "Create rules to automatically block unwanted notifications. Tap a notification in the History tab to create a rule, or browse pre-built rules.",
-                    actionLabel = "Browse Pre-built Rules",
+                    title = stringResource(R.string.no_rules_created),
+                    description = stringResource(R.string.no_rules_created_desc),
+                    actionLabel = stringResource(R.string.browse_prebuilt_rules),
                     onAction = onBrowsePrebuiltRulesClick
                 )
             }
         } else {
             item {
                 Text(
-                    text = "Any notifications matching the rules given below will be blocked automatically.",
+                    text = stringResource(R.string.rules_auto_block_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -145,7 +137,7 @@ fun RulesScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
-                Text("Add a New Rule")
+                Text(stringResource(R.string.add_new_rule))
             }
             Button(
                 onClick = onBrowsePrebuiltRulesClick,
@@ -153,7 +145,7 @@ fun RulesScreen(
                     .fillMaxWidth()
                     .padding(top = 8.dp, bottom = 16.dp)
             ) {
-                Text("Browse Pre-built Rules")
+                Text(stringResource(R.string.browse_prebuilt_rules))
             }
         }
     }
@@ -193,14 +185,14 @@ private fun RuleCard(
                 }
                 val titleFilterText = if (rule.titleFilter.isNullOrBlank()) "N/A" else rule.titleFilter.orEmpty()
                 Text(
-                    text = "Title: $titleFilterText",
+                    text = stringResource(R.string.notification_title_prefix, titleFilterText),
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 val textFilterText = if (rule.textFilter.isNullOrBlank()) "N/A" else rule.textFilter.orEmpty()
                 Text(
-                    text = "Text: $textFilterText",
+                    text = stringResource(R.string.notification_text_prefix, textFilterText),
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -209,7 +201,7 @@ private fun RuleCard(
             if (rule.advancedConfig?.isTimeLimitEnabled == true) {
                 Icon(
                     imageVector = Icons.Filled.AccessAlarms,
-                    contentDescription = "Time limited rule",
+                    contentDescription = stringResource(R.string.time_limited_rule),
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp)
                 )
             }
@@ -225,13 +217,13 @@ private fun RuleCard(
                 )
                 if (rule.hitCount > 0) {
                     Text(
-                        text = "Hits: ${rule.hitCount}",
+                        text = stringResource(R.string.hits_count, rule.hitCount),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
                 } else {
                     Text(
-                        text = "No hits",
+                        text = stringResource(R.string.no_hits),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )

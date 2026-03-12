@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.donotnotify.donotnotify.BlockerRule
 import com.donotnotify.donotnotify.PrebuiltRulesRepository
+import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.RuleType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -111,10 +113,10 @@ fun PrebuiltRulesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Pre-built Rules") },
+                title = { Text(stringResource(R.string.prebuilt_rules)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -134,11 +136,11 @@ fun PrebuiltRulesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    placeholder = { Text("Search apps...") },
+                    placeholder = { Text(stringResource(R.string.search_apps)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search"
+                            contentDescription = stringResource(R.string.search)
                         )
                     },
                     trailingIcon = {
@@ -146,7 +148,7 @@ fun PrebuiltRulesScreen(
                             IconButton(onClick = { searchQuery = "" }) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = "Clear search"
+                                    contentDescription = stringResource(R.string.clear_search)
                                 )
                             }
                         }
@@ -163,7 +165,7 @@ fun PrebuiltRulesScreen(
 
             item(key = "description") {
                 Text(
-                    text = "Add pre-configured rules for apps you have installed. These rules block common promotional and engagement notifications.",
+                    text = stringResource(R.string.prebuilt_rules_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -180,9 +182,9 @@ fun PrebuiltRulesScreen(
                     ) {
                         Text(
                             text = if (searchQuery.isNotEmpty()) {
-                                "No rules match your search"
+                                stringResource(R.string.no_rules_match_search)
                             } else {
-                                "No new pre-built rules available"
+                                stringResource(R.string.no_new_prebuilt_rules)
                             },
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center
@@ -190,9 +192,9 @@ fun PrebuiltRulesScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = if (searchQuery.isNotEmpty()) {
-                                "Try a different search term"
+                                stringResource(R.string.try_different_search)
                             } else {
-                                "You've already added all available rules for your installed apps, or no supported apps are installed."
+                                stringResource(R.string.all_rules_added)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -242,9 +244,11 @@ private fun PrebuiltRuleCard(
     }
 
     val actionText = when (rule.ruleType) {
-        RuleType.DENYLIST -> "Blocks notifications containing:"
-        RuleType.ALLOWLIST -> "Allows only notifications containing:"
+        RuleType.DENYLIST -> stringResource(R.string.blocks_notifications_containing)
+        RuleType.ALLOWLIST -> stringResource(R.string.allows_only_notifications_containing)
     }
+
+    val unknownApp = stringResource(R.string.unknown_app)
 
     Card(
         modifier = Modifier
@@ -283,7 +287,7 @@ private fun PrebuiltRuleCard(
                 // App name and rule type
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = rule.appName ?: rule.packageName ?: "Unknown",
+                        text = rule.appName ?: rule.packageName ?: unknownApp,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -305,7 +309,7 @@ private fun PrebuiltRuleCard(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Add")
+                    Text(stringResource(R.string.add))
                 }
             }
 
@@ -366,12 +370,12 @@ private fun RuleTypeBadge(ruleType: RuleType) {
     val (icon, text, color) = when (ruleType) {
         RuleType.DENYLIST -> Triple(
             Icons.Filled.Block,
-            "Denylist",
+            stringResource(R.string.denylist),
             MaterialTheme.colorScheme.error
         )
         RuleType.ALLOWLIST -> Triple(
             Icons.Filled.CheckCircle,
-            "Allowlist",
+            stringResource(R.string.allowlist),
             MaterialTheme.colorScheme.primary
         )
     }
