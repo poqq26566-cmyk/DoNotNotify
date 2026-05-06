@@ -146,6 +146,53 @@
     <string name="about_version">Version : %s</string>
     <string name="about_developer">Développeur : %s</string>
 
+    <!-- Setup wizard -->
+    <string name="setup_skip">Passer</string>
+    <string name="setup_next">Suivant</string>
+    <string name="setup_back">Retour</string>
+    <string name="setup_finish">Terminer</string>
+    <string name="setup_done_check">Terminé</string>
+    <string name="setup_step_indicator">Étape %1$d sur %2$d</string>
+
+    <string name="setup_welcome_title">Garder DoNotNotify actif</string>
+    <string name="setup_welcome_body">Certains téléphones Android ferment agressivement les applications en arrière-plan pour économiser la batterie — ce qui arrêterait silencieusement le filtrage des notifications. Les étapes suivantes protègent cette application contre l\'arrêt forcé.</string>
+    <string name="setup_welcome_cta">Commencer</string>
+
+    <string name="setup_listener_title">Accorder l\'accès aux notifications</string>
+    <string name="setup_listener_body">DoNotNotify a besoin d\'accéder à vos notifications pour les filtrer et les bloquer selon vos règles.</string>
+    <string name="setup_listener_cta">Ouvrir les paramètres</string>
+    <string name="setup_listener_granted">Accordé</string>
+
+    <string name="setup_battery_title">Désactiver l\'optimisation de la batterie</string>
+    <string name="setup_battery_body">Android met les applications en veille pour économiser la batterie (Doze). Pour que DoNotNotify continue à filtrer en arrière-plan, veuillez l\'autoriser à fonctionner sans restrictions.</string>
+    <string name="setup_battery_cta">Autoriser une utilisation illimitée de la batterie</string>
+    <string name="setup_battery_granted">Autorisé</string>
+
+    <string name="setup_oem_title">Autoriser le démarrage automatique sur votre téléphone</string>
+    <string name="setup_oem_body_generic">Le fabricant de votre téléphone ajoute une couche supplémentaire de restrictions des applications en arrière-plan. Appuyez ci-dessous pour ouvrir l\'écran de paramètres correspondant et activer le démarrage automatique / l\'activité en arrière-plan pour DoNotNotify.</string>
+    <string name="setup_oem_body_xiaomi">Xiaomi / MIUI ferme agressivement les applications en arrière-plan. Appuyez ci-dessous pour ouvrir les paramètres de démarrage automatique, puis activez DoNotNotify. Vérifiez aussi Batterie et performances → économiseur de batterie de l\'application → Aucune restriction.</string>
+    <string name="setup_oem_body_huawei">Huawei / Honor restreint les applications en arrière-plan via le Gestionnaire du téléphone. Appuyez ci-dessous pour ouvrir la Gestion des démarrages, puis activez le Lancement automatique pour DoNotNotify.</string>
+    <string name="setup_oem_body_oppo">OPPO / ColorOS restreint les applications en arrière-plan. Appuyez ci-dessous pour ouvrir le Gestionnaire de démarrage, puis autorisez DoNotNotify à démarrer automatiquement.</string>
+    <string name="setup_oem_body_oneplus">OnePlus restreint l\'activité en arrière-plan par défaut. Appuyez ci-dessous pour autoriser DoNotNotify à se lancer en arrière-plan.</string>
+    <string name="setup_oem_body_vivo">Vivo restreint les applications en arrière-plan. Appuyez ci-dessous pour ouvrir la Gestion des démarrages en arrière-plan, puis autorisez DoNotNotify.</string>
+    <string name="setup_oem_body_samsung">Device Care de Samsung peut mettre DoNotNotify en veille. Appuyez ci-dessous pour ouvrir les paramètres de la batterie, puis marquez DoNotNotify comme Sans restriction (Batterie → Limites d\'utilisation en arrière-plan).</string>
+    <string name="setup_oem_body_asus">ASUS Mobile Manager restreint les applications en arrière-plan. Appuyez ci-dessous pour ouvrir le gestionnaire de démarrage automatique et activer DoNotNotify.</string>
+    <string name="setup_oem_body_letv">Letv restreint les applications en arrière-plan. Appuyez ci-dessous pour ouvrir la Gestion du démarrage automatique.</string>
+    <string name="setup_oem_body_meizu">Meizu restreint les applications en arrière-plan. Appuyez ci-dessous pour ouvrir les paramètres de Sécurité.</string>
+    <string name="setup_oem_body_nokia">Nokia utilise une couche d\'économie d\'énergie Evenwell qui peut fermer DoNotNotify. Appuyez ci-dessous pour l\'ajouter à la liste protégée.</string>
+    <string name="setup_oem_cta">Ouvrir les paramètres</string>
+    <string name="setup_oem_done">C\'est fait</string>
+    <string name="setup_oem_failed">Impossible d\'ouvrir l\'écran des paramètres. Veuillez trouver manuellement les paramètres de démarrage automatique ou d\'activité en arrière-plan sur votre téléphone et autoriser DoNotNotify.</string>
+
+    <string name="setup_done_title">Tout est prêt</string>
+    <string name="setup_done_body">DoNotNotify s\'exécutera en arrière-plan et filtrera les notifications. Nous vérifierons régulièrement que tout fonctionne — si votre téléphone ferme l\'application, vous recevrez une notification pour la corriger.</string>
+
+    <!-- Health check notification -->
+    <string name="health_channel_name">Santé du service</string>
+    <string name="health_channel_description">Vous alerte lorsque DoNotNotify ne fonctionne pas.</string>
+    <string name="health_notification_title">DoNotNotify ne fonctionne pas</string>
+    <string name="health_notification_body">Votre téléphone a fermé DoNotNotify. Appuyez pour le réactiver et vérifier les paramètres d\'économie d\'énergie.</string>
+
     <!-- Main screen -->
     <string name="service_active">Service actif</string>
     <string name="toast_service_enabled">Le service de notifications est activé</string>

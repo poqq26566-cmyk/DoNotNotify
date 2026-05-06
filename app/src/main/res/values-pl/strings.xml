@@ -146,6 +146,53 @@
     <string name="about_version">Wersja: %s</string>
     <string name="about_developer">Deweloper: %s</string>
 
+    <!-- Setup wizard -->
+    <string name="setup_skip">Pomiń</string>
+    <string name="setup_next">Dalej</string>
+    <string name="setup_back">Wstecz</string>
+    <string name="setup_finish">Zakończ</string>
+    <string name="setup_done_check">Gotowe</string>
+    <string name="setup_step_indicator">Krok %1$d z %2$d</string>
+
+    <string name="setup_welcome_title">Utrzymaj DoNotNotify przy życiu</string>
+    <string name="setup_welcome_body">Niektóre telefony z Androidem agresywnie zamykają aplikacje działające w tle, aby oszczędzać baterię — co po cichu wyłącza filtrowanie powiadomień. Kolejne kroki chronią tę aplikację przed zamknięciem.</string>
+    <string name="setup_welcome_cta">Rozpocznij</string>
+
+    <string name="setup_listener_title">Przyznaj dostęp do powiadomień</string>
+    <string name="setup_listener_body">DoNotNotify potrzebuje dostępu do Twoich powiadomień, aby filtrować je i blokować zgodnie z Twoimi regułami.</string>
+    <string name="setup_listener_cta">Otwórz ustawienia</string>
+    <string name="setup_listener_granted">Przyznano</string>
+
+    <string name="setup_battery_title">Wyłącz optymalizację baterii</string>
+    <string name="setup_battery_body">Android usypia aplikacje, aby oszczędzać baterię (Doze). Aby DoNotNotify nadal filtrował w tle, zezwól mu na nieograniczone działanie.</string>
+    <string name="setup_battery_cta">Zezwól na nieograniczone użycie baterii</string>
+    <string name="setup_battery_granted">Dozwolone</string>
+
+    <string name="setup_oem_title">Zezwól na autostart na swoim telefonie</string>
+    <string name="setup_oem_body_generic">Producent Twojego telefonu dodaje dodatkową warstwę ograniczeń dla aplikacji w tle. Naciśnij poniżej, aby otworzyć odpowiedni ekran ustawień i włączyć autostart / aktywność w tle dla DoNotNotify.</string>
+    <string name="setup_oem_body_xiaomi">Xiaomi / MIUI agresywnie zamyka aplikacje w tle. Naciśnij poniżej, aby otworzyć ustawienia Autostartu i włączyć DoNotNotify. Sprawdź też Bateria i wydajność → oszczędzanie baterii aplikacji → Bez ograniczeń.</string>
+    <string name="setup_oem_body_huawei">Huawei / Honor ogranicza aplikacje w tle przez Menedżer telefonu. Naciśnij poniżej, aby otworzyć Zarządzanie uruchamianiem, i włącz automatyczne uruchamianie dla DoNotNotify.</string>
+    <string name="setup_oem_body_oppo">OPPO / ColorOS ogranicza aplikacje w tle. Naciśnij poniżej, aby otworzyć Menedżer uruchamiania i pozwolić DoNotNotify na automatyczne uruchamianie.</string>
+    <string name="setup_oem_body_oneplus">OnePlus domyślnie ogranicza aktywność w tle. Naciśnij poniżej, aby pozwolić DoNotNotify uruchamiać się w tle.</string>
+    <string name="setup_oem_body_vivo">Vivo ogranicza aplikacje w tle. Naciśnij poniżej, aby otworzyć Zarządzanie uruchamianiem w tle i zezwolić DoNotNotify.</string>
+    <string name="setup_oem_body_samsung">Samsung Device Care może usypiać DoNotNotify. Naciśnij poniżej, aby otworzyć ustawienia baterii i oznaczyć DoNotNotify jako Bez ograniczeń (Bateria → Ograniczenia użycia w tle).</string>
+    <string name="setup_oem_body_asus">ASUS Mobile Manager ogranicza aplikacje w tle. Naciśnij poniżej, aby otworzyć menedżer autostartu i włączyć DoNotNotify.</string>
+    <string name="setup_oem_body_letv">Letv ogranicza aplikacje w tle. Naciśnij poniżej, aby otworzyć Zarządzanie autostartem.</string>
+    <string name="setup_oem_body_meizu">Meizu ogranicza aplikacje w tle. Naciśnij poniżej, aby otworzyć ustawienia Bezpieczeństwa.</string>
+    <string name="setup_oem_body_nokia">Nokia używa warstwy oszczędzania energii Evenwell, która może zamknąć DoNotNotify. Naciśnij poniżej, aby dodać go do listy chronionej.</string>
+    <string name="setup_oem_cta">Otwórz ustawienia</string>
+    <string name="setup_oem_done">Zrobione</string>
+    <string name="setup_oem_failed">Nie udało się otworzyć ekranu ustawień. Znajdź ręcznie ustawienia autostartu lub aktywności w tle na swoim telefonie i zezwól DoNotNotify.</string>
+
+    <string name="setup_done_title">Gotowe</string>
+    <string name="setup_done_body">DoNotNotify będzie działać w tle i filtrować powiadomienia. Będziemy okresowo sprawdzać, czy wszystko działa — jeśli Twój telefon zamknie aplikację, otrzymasz powiadomienie, aby to naprawić.</string>
+
+    <!-- Health check notification -->
+    <string name="health_channel_name">Stan usługi</string>
+    <string name="health_channel_description">Powiadamia, gdy DoNotNotify nie działa.</string>
+    <string name="health_notification_title">DoNotNotify nie działa</string>
+    <string name="health_notification_body">Twój telefon zamknął DoNotNotify. Naciśnij, aby ponownie włączyć i sprawdzić ustawienia oszczędzania energii.</string>
+
     <!-- Main screen -->
     <string name="service_active">Usługa aktywna</string>
     <string name="toast_service_enabled">Usługa powiadomień jest włączona</string>

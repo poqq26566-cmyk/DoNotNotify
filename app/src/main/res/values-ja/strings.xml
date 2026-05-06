@@ -146,6 +146,53 @@
     <string name="about_version">バージョン: %s</string>
     <string name="about_developer">開発者: %s</string>
 
+    <!-- Setup wizard -->
+    <string name="setup_skip">スキップ</string>
+    <string name="setup_next">次へ</string>
+    <string name="setup_back">戻る</string>
+    <string name="setup_finish">完了</string>
+    <string name="setup_done_check">完了</string>
+    <string name="setup_step_indicator">ステップ %1$d / %2$d</string>
+
+    <string name="setup_welcome_title">DoNotNotifyを動かし続ける</string>
+    <string name="setup_welcome_body">一部のAndroid端末はバッテリー節約のためバックグラウンドアプリを強制終了します — これにより通知のフィルタリングが知らないうちに停止してしまいます。次のステップでこのアプリが終了されないよう保護します。</string>
+    <string name="setup_welcome_cta">はじめる</string>
+
+    <string name="setup_listener_title">通知へのアクセスを許可</string>
+    <string name="setup_listener_body">DoNotNotifyはルールに従って通知をフィルタリング・ブロックするため、通知へのアクセス権が必要です。</string>
+    <string name="setup_listener_cta">設定を開く</string>
+    <string name="setup_listener_granted">許可済み</string>
+
+    <string name="setup_battery_title">バッテリー最適化を無効にする</string>
+    <string name="setup_battery_body">Androidはバッテリー節約のためアプリをスリープ状態にします（Doze）。DoNotNotifyがバックグラウンドでフィルタリングを続けられるよう、無制限での実行を許可してください。</string>
+    <string name="setup_battery_cta">バッテリー使用を制限なしに許可</string>
+    <string name="setup_battery_granted">許可済み</string>
+
+    <string name="setup_oem_title">端末の自動起動を許可</string>
+    <string name="setup_oem_body_generic">お使いの端末メーカーは独自にバックグラウンドアプリを制限する仕組みを追加しています。下のボタンから該当する設定画面を開き、DoNotNotifyの自動起動／バックグラウンド動作を有効にしてください。</string>
+    <string name="setup_oem_body_xiaomi">Xiaomi / MIUIはバックグラウンドアプリを強制終了する傾向があります。下のボタンから自動起動の設定を開き、DoNotNotifyを有効にしてください。さらに「バッテリーとパフォーマンス → アプリのバッテリーセーバー → 制限なし」も確認してください。</string>
+    <string name="setup_oem_body_huawei">Huawei / Honorは「端末管理」でバックグラウンドアプリを制限します。下のボタンから「起動の管理」を開き、DoNotNotifyの自動起動を有効にしてください。</string>
+    <string name="setup_oem_body_oppo">OPPO / ColorOSはバックグラウンドアプリを制限します。下のボタンから「起動マネージャー」を開き、DoNotNotifyの自動起動を許可してください。</string>
+    <string name="setup_oem_body_oneplus">OnePlusは既定でバックグラウンド動作を制限します。下のボタンからDoNotNotifyのバックグラウンド起動を許可してください。</string>
+    <string name="setup_oem_body_vivo">Vivoはバックグラウンドアプリを制限します。下のボタンから「バックグラウンド起動の管理」を開き、DoNotNotifyを許可してください。</string>
+    <string name="setup_oem_body_samsung">SamsungのDevice CareはDoNotNotifyをスリープさせる場合があります。下のボタンからバッテリー設定を開き、DoNotNotifyを「制限なし」に設定してください（バッテリー → バックグラウンド使用の制限）。</string>
+    <string name="setup_oem_body_asus">ASUS Mobile Managerはバックグラウンドアプリを制限します。下のボタンから自動起動マネージャーを開き、DoNotNotifyを有効にしてください。</string>
+    <string name="setup_oem_body_letv">Letvはバックグラウンドアプリを制限します。下のボタンから自動起動の管理を開いてください。</string>
+    <string name="setup_oem_body_meizu">Meizuはバックグラウンドアプリを制限します。下のボタンからセキュリティ設定を開いてください。</string>
+    <string name="setup_oem_body_nokia">NokiaはEvenwellの省電力レイヤーを使用しており、DoNotNotifyを終了させることがあります。下のボタンから保護対象リストに追加してください。</string>
+    <string name="setup_oem_cta">設定を開く</string>
+    <string name="setup_oem_done">設定しました</string>
+    <string name="setup_oem_failed">設定画面を開けませんでした。お使いの端末で自動起動またはバックグラウンド動作の設定を手動で見つけ、DoNotNotifyを許可してください。</string>
+
+    <string name="setup_done_title">準備完了</string>
+    <string name="setup_done_body">DoNotNotifyはバックグラウンドで動作し、通知をフィルタリングします。動作状況を定期的に確認します — 端末がアプリを終了させた場合は、修正のための通知が届きます。</string>
+
+    <!-- Health check notification -->
+    <string name="health_channel_name">サービスの状態</string>
+    <string name="health_channel_description">DoNotNotifyが動作していないときに通知します。</string>
+    <string name="health_notification_title">DoNotNotifyが動作していません</string>
+    <string name="health_notification_body">端末がDoNotNotifyを終了しました。タップして再度有効にし、省電力設定を確認してください。</string>
+
     <!-- Main screen -->
     <string name="service_active">サービス稼働中</string>
     <string name="toast_service_enabled">通知サービスが有効です</string>

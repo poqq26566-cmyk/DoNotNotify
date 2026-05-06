@@ -146,6 +146,53 @@
     <string name="about_version">Версия: %s</string>
     <string name="about_developer">Разработчик: %s</string>
 
+    <!-- Setup wizard -->
+    <string name="setup_skip">Пропустить</string>
+    <string name="setup_next">Далее</string>
+    <string name="setup_back">Назад</string>
+    <string name="setup_finish">Завершить</string>
+    <string name="setup_done_check">Готово</string>
+    <string name="setup_step_indicator">Шаг %1$d из %2$d</string>
+
+    <string name="setup_welcome_title">Не дайте отключить DoNotNotify</string>
+    <string name="setup_welcome_body">Некоторые телефоны Android агрессивно отключают фоновые приложения для экономии заряда — из-за чего фильтрация уведомлений тихо прекращается. Следующие шаги защитят это приложение от принудительного завершения.</string>
+    <string name="setup_welcome_cta">Начать</string>
+
+    <string name="setup_listener_title">Предоставьте доступ к уведомлениям</string>
+    <string name="setup_listener_body">DoNotNotify нужен доступ к вашим уведомлениям, чтобы фильтровать и блокировать их по вашим правилам.</string>
+    <string name="setup_listener_cta">Открыть настройки</string>
+    <string name="setup_listener_granted">Предоставлен</string>
+
+    <string name="setup_battery_title">Отключите оптимизацию батареи</string>
+    <string name="setup_battery_body">Android усыпляет приложения для экономии заряда (Doze). Чтобы DoNotNotify продолжал фильтрацию в фоне, разрешите ему работать без ограничений.</string>
+    <string name="setup_battery_cta">Разрешить неограниченное использование батареи</string>
+    <string name="setup_battery_granted">Разрешено</string>
+
+    <string name="setup_oem_title">Разрешите автозапуск на вашем телефоне</string>
+    <string name="setup_oem_body_generic">Производитель вашего телефона добавляет дополнительный уровень ограничений для фоновых приложений. Нажмите ниже, чтобы открыть соответствующий экран настроек и включить автозапуск / фоновую активность для DoNotNotify.</string>
+    <string name="setup_oem_body_xiaomi">Xiaomi / MIUI агрессивно завершает фоновые приложения. Нажмите ниже, чтобы открыть настройки автозапуска, и включите DoNotNotify. Также проверьте Батарея и производительность → энергосбережение приложения → Без ограничений.</string>
+    <string name="setup_oem_body_huawei">Huawei / Honor ограничивает фоновые приложения через Диспетчер телефона. Нажмите ниже, чтобы открыть Управление запуском, и включите Автозапуск для DoNotNotify.</string>
+    <string name="setup_oem_body_oppo">OPPO / ColorOS ограничивает фоновые приложения. Нажмите ниже, чтобы открыть Диспетчер запуска, и разрешите DoNotNotify запускаться автоматически.</string>
+    <string name="setup_oem_body_oneplus">OnePlus по умолчанию ограничивает фоновую активность. Нажмите ниже, чтобы разрешить DoNotNotify запускаться в фоне.</string>
+    <string name="setup_oem_body_vivo">Vivo ограничивает фоновые приложения. Нажмите ниже, чтобы открыть Управление фоновым запуском, и разрешите DoNotNotify.</string>
+    <string name="setup_oem_body_samsung">Device Care от Samsung может усыплять DoNotNotify. Нажмите ниже, чтобы открыть настройки батареи, и отметьте DoNotNotify как Без ограничений (Батарея → Ограничения фонового использования).</string>
+    <string name="setup_oem_body_asus">ASUS Mobile Manager ограничивает фоновые приложения. Нажмите ниже, чтобы открыть менеджер автозапуска и включить DoNotNotify.</string>
+    <string name="setup_oem_body_letv">Letv ограничивает фоновые приложения. Нажмите ниже, чтобы открыть Управление автозапуском.</string>
+    <string name="setup_oem_body_meizu">Meizu ограничивает фоновые приложения. Нажмите ниже, чтобы открыть настройки безопасности.</string>
+    <string name="setup_oem_body_nokia">Nokia использует слой энергосбережения Evenwell, который может завершить DoNotNotify. Нажмите ниже, чтобы добавить его в защищённый список.</string>
+    <string name="setup_oem_cta">Открыть настройки</string>
+    <string name="setup_oem_done">Я это сделал</string>
+    <string name="setup_oem_failed">Не удалось открыть экран настроек. Пожалуйста, найдите настройки автозапуска или фоновой активности на телефоне вручную и разрешите DoNotNotify.</string>
+
+    <string name="setup_done_title">Всё готово</string>
+    <string name="setup_done_body">DoNotNotify будет работать в фоне и фильтровать уведомления. Мы будем периодически проверять, что всё работает — если телефон отключит приложение, вы получите уведомление, чтобы это исправить.</string>
+
+    <!-- Health check notification -->
+    <string name="health_channel_name">Состояние службы</string>
+    <string name="health_channel_description">Предупреждает, когда DoNotNotify не работает.</string>
+    <string name="health_notification_title">DoNotNotify не работает</string>
+    <string name="health_notification_body">Ваш телефон отключил DoNotNotify. Нажмите, чтобы снова включить и проверить настройки энергосбережения.</string>
+
     <!-- Main screen -->
     <string name="service_active">Служба активна</string>
     <string name="toast_service_enabled">Служба уведомлений включена</string>

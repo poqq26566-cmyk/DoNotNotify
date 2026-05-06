@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -51,13 +50,15 @@ import com.donotnotify.donotnotify.ui.components.AutoAddedRulesDialog
 import com.donotnotify.donotnotify.ui.components.DeleteConfirmationDialog
 import com.donotnotify.donotnotify.ui.components.EditRuleDialog
 import com.donotnotify.donotnotify.ui.components.HistoryNotificationDetailsDialog
+import com.donotnotify.donotnotify.health.HealthCheckWorker
 import com.donotnotify.donotnotify.ui.components.NotificationDetailsDialog
+import com.donotnotify.donotnotify.setup.SetupState
 import com.donotnotify.donotnotify.ui.screens.BlockedScreen
-import com.donotnotify.donotnotify.ui.screens.EnableNotificationListenerScreen
 import com.donotnotify.donotnotify.ui.screens.HistoryScreen
 import com.donotnotify.donotnotify.ui.screens.PrebuiltRulesScreen
 import com.donotnotify.donotnotify.ui.screens.RulesScreen
 import com.donotnotify.donotnotify.ui.screens.SettingsScreen
+import com.donotnotify.donotnotify.ui.screens.SetupWizardScreen
 import com.donotnotify.donotnotify.ui.theme.DoNotNotifyTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
@@ -79,6 +80,8 @@ class MainActivity : ComponentActivity() {
     private var showPrebuiltRulesScreen by mutableStateOf(false)
     private var autoAddedApps by mutableStateOf<List<String>>(emptyList())
     private var showAutoAddedDialog by mutableStateOf(false)
+    private var showSetupWizard by mutableStateOf(false)
+    private var wizardShowsWelcome by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -100,6 +103,9 @@ class MainActivity : ComponentActivity() {
         }
 
         isServiceEnabled = isNotificationServiceEnabled()
+        wizardShowsWelcome = !isServiceEnabled && SetupState.lastSeenSetupVersion(this) == 0
+        showSetupWizard = SetupState.shouldShowSetupWizard(this) ||
+            intent?.getBooleanExtra(HealthCheckWorker.EXTRA_OPEN_WIZARD, false) == true
         setContent {
             DoNotNotifyTheme {
                 val systemUiController = rememberSystemUiController()
@@ -118,6 +124,9 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         isServiceEnabled = isNotificationServiceEnabled()
+        if (!isServiceEnabled) {
+            showSetupWizard = true
+        }
         pastNotifications = notificationHistoryStorage.getHistory()
         blockedNotifications = blockedNotificationHistoryStorage.getHistory()
         rules = ruleStorage.getRules()
@@ -199,14 +208,22 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        if (showSettingsScreen) {
-            BackHandler { 
-                showSettingsScreen = false 
+        if (showSetupWizard) {
+            SetupWizardScreen(
+                showWelcome = wizardShowsWelcome,
+                onFinish = {
+                    showSetupWizard = false
+                    isServiceEnabled = isNotificationServiceEnabled()
+                },
+            )
+        } else if (showSettingsScreen) {
+            BackHandler {
+                showSettingsScreen = false
                 rules = ruleStorage.getRules()
             }
             SettingsScreen(
-                onClose = { 
-                    showSettingsScreen = false 
+                onClose = {
+                    showSettingsScreen = false
                     rules = ruleStorage.getRules()
                 }
             )
@@ -222,7 +239,7 @@ class MainActivity : ComponentActivity() {
                     Toast.makeText(context, context.getString(R.string.toast_rule_added), Toast.LENGTH_SHORT).show()
                 }
             )
-        } else if (isServiceEnabled) {
+        } else {
             TabbedScreen(
                 pagerState = pagerState,
                 pastNotifications = pastNotifications,
@@ -269,8 +286,6 @@ class MainActivity : ComponentActivity() {
                     Toast.makeText(context, context.getString(R.string.toast_resumed_monitoring, packageName), Toast.LENGTH_SHORT).show()
                 }
             )
-        } else {
-            EnableNotificationListenerScreen(onEnableClick = { openNotificationListenerSettings() })
         }
 
         notificationToShowAddDialog?.let { notification ->
@@ -555,11 +570,6 @@ class MainActivity : ComponentActivity() {
                 onDeleteNotificationClick
             )
         }
-    }
-
-    private fun openNotificationListenerSettings() {
-        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-        startActivity(intent)
     }
 
     private fun isNotificationServiceEnabled(): Boolean {

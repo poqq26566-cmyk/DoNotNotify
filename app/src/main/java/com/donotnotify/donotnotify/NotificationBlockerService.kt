@@ -1,12 +1,14 @@
 package com.donotnotify.donotnotify
 
 import android.app.Notification
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import com.donotnotify.donotnotify.setup.SetupState
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -195,6 +197,22 @@ class NotificationBlockerService : NotificationListenerService() {
 
         // Clean up old entries from the debounce map
         recentlyBlocked.entries.removeIf { (_, timestamp) -> currentTime - timestamp > DEBOUNCE_PERIOD_MS }
+    }
+
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        SetupState.recordListenerConnected(this)
+        Log.i(TAG, "Listener connected")
+    }
+
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
+        Log.w(TAG, "Listener disconnected — requesting rebind")
+        try {
+            requestRebind(ComponentName(this, NotificationBlockerService::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "requestRebind failed", e)
+        }
     }
 
     override fun onDestroy() {
