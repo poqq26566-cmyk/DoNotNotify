@@ -226,9 +226,14 @@ private fun RuleDialog(
                         SegmentedButton(
                             selected = ruleType == type,
                             onClick = { ruleType = type },
+                            modifier = Modifier.weight(1f),
                             shape = SegmentedButtonDefaults.itemShape(index = index, count = RuleType.entries.size),
                         ) {
-                            Text(type.name)
+                            Text(
+                                text = type.label(),
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelSmall
+                            )
                         }
                     }
                 }

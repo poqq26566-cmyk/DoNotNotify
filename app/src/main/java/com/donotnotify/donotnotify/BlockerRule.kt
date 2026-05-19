@@ -15,7 +15,10 @@ enum class RuleType {
     @SerializedName(value = "DENYLIST", alternate = ["BLACKLIST"])
     DENYLIST,
     @SerializedName(value = "ALLOWLIST", alternate = ["WHITELIST"])
-    ALLOWLIST
+    ALLOWLIST,
+
+    @SerializedName(value = "STACK", alternate = ["GROUP", "STACKED"])
+    STACK
 }
 
 @Keep

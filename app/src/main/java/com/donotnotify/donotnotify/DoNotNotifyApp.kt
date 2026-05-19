@@ -10,7 +10,21 @@ class DoNotNotifyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         createHealthChannel()
+        createStackChannel()
         HealthCheckWorker.enqueue(this)
+    }
+
+    private fun createStackChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val nm = getSystemService(NotificationManager::class.java) ?: return
+        val channel = NotificationChannel(
+            StackedNotificationManager.CHANNEL_ID,
+            getString(R.string.stack_channel_name),
+            NotificationManager.IMPORTANCE_DEFAULT,
+        ).apply {
+            description = getString(R.string.stack_channel_description)
+        }
+        nm.createNotificationChannel(channel)
     }
 
     private fun createHealthChannel() {

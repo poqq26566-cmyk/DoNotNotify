@@ -285,6 +285,7 @@ The pattern uses nullable state variables: setting to non-null shows the dialog,
    - There are allowlist rules for the package AND none matched, OR
    - Any denylist rule matched
 6. **Denylist wins over allowlist** - if both match, the notification is blocked
+7. **STACK** is evaluated only when not blocked: `shouldStack = !blocked && matchesStack && !wasOngoing`. STACK rules never block and never gate (they don't make a package allowlist-gated). Resolved by the pure `RuleMatcher.planNotificationDecision()`; first enabled STACK match wins. Stacked notifications are re-posted via `StackedNotificationManager` and saved to *normal* history (not blocked history)
 
 ### Filter Behavior
 
@@ -370,6 +371,13 @@ The primary test class is `RuleMatcherTest` which covers:
 - Regex matching
 - Disabled rule handling
 - Real-world regex patterns (Mygate)
+- STACK: never blocks, doesn't gate like allowlist, filter parity with DENYLIST
+
+Two further JVM test classes cover the STACK feature (no Robolectric — pure functions + a fake `StackPoster`):
+- **`NotificationDecisionTest`** — the full block/stack precedence matrix of `RuleMatcher.planNotificationDecision()`
+- **`StackedNotificationManagerTest`** — `groupKeyFor`, pure `planAbsorb`, and transactional `absorbAndPost` (precondition, update/ping, eviction caps, rollback, `reconcileOnConnect`)
+
+> Unit tests rely on `testOptions.unitTests.isReturnDefaultValues = true` (in `app/build.gradle.kts`) so stubbed `android.util.Log` calls return defaults instead of throwing. Keep Android side-effects behind the `StackPoster` seam (or other interfaces) and assert on the pure plan objects.
 
 ### Writing New Tests
 

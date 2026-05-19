@@ -64,7 +64,8 @@ DoNotNotify/
 │       │   ├── java/com/donotnotify/donotnotify/
 │       │   │   ├── MainActivity.kt                    # App entry point, navigation, state
 │       │   │   ├── NotificationBlockerService.kt      # Notification listener service
-│       │   │   ├── RuleMatcher.kt                     # Rule evaluation engine
+│       │   │   ├── RuleMatcher.kt                     # Rule evaluation + pure planNotificationDecision
+│       │   │   ├── StackedNotificationManager.kt      # STACK registry + transactional re-post engine
 │       │   │   ├── BlockerRule.kt                     # Data models (rule, enums, config)
 │       │   │   ├── SimpleNotification.kt              # Notification data model
 │       │   │   ├── RuleStorage.kt                     # Rule persistence (JSON file)
@@ -175,6 +176,7 @@ data class BlockerRule(
 
 - `DENYLIST` - Block notifications that match this rule
 - `ALLOWLIST` - Allow only notifications that match; block everything else for this package
+- `STACK` - Don't block; cancel the source notification and re-post matching ones as a single native notification group (summary + children). One stack per distinct rule signature. Does not gate like an allowlist; a block always wins over STACK; ongoing notifications are never stacked
 
 ### `AdvancedRuleConfig`
 
@@ -244,17 +246,22 @@ Notification received (StatusBarNotification)
     │
     ├── Save/update app info (icon + name) in SQLite if not cached
     │
-    ├── Load all rules for this package
-    │   ├── Evaluate ALLOWLIST rules (first match wins)
-    │   └── Evaluate DENYLIST rules (first match wins)
+    ├── Self-package reentrancy guard: return early if packageName == BuildConfig.APPLICATION_ID
+    │   (our own re-posted stack notifications must not re-enter processing)
     │
-    ├── Update hitCount on matched rules
+    ├── Load all rules; RuleMatcher.planNotificationDecision(...) resolves precedence:
+    │   ├── ALLOWLIST / DENYLIST / STACK each first-match-wins
+    │   ├── blocked = (hasAllowlist && !matchesAllowlist) || matchesDenylist
+    │   └── shouldStack = !blocked && matchesStack && !wasOngoing
     │
-    ├── Determine block decision:
-    │   blocked = (hasAllowlist && !matchesAllowlist) || matchesDenylist
+    ├── Update hitCount on matched rules (matchedRuleIndices)
     │
     ├── If blocked: cancelNotification(sbn.key)
     │   └── Logs warning if notification has FLAG_ONGOING_EVENT
+    │
+    ├── Else if shouldStack: StackedNotificationManager.absorbAndPost(...)
+    │   └── Post-then-cancel — cancelNotification(sbn.key) ONLY if the re-post succeeded
+    │       (stacked items are NOT "blocked": they fall through to normal history)
     │
     ├── Debounce check (5-second window per notification key)
     │   └── key = "$packageName:$title:$text"
@@ -279,7 +286,7 @@ Notification received (StatusBarNotification)
 
 **Type:** Singleton object
 
-Stateless rule evaluation engine with two public methods:
+Stateless rule evaluation engine. `matches()` and `shouldBlock()` are unchanged; `planNotificationDecision()` is the pure precedence resolver the service now uses.
 
 #### `matches(rule, packageName, title, text): Boolean`
 
@@ -306,7 +313,29 @@ Higher-level method that evaluates all rules for a package:
 4. Checks denylist rules (first match = denylisted)
 5. **Blocking logic:** `(hasAllowlistRules && !matchesAllowlist) || matchesDenylist`
 
-This means denylist rules take priority over allowlist rules when both match.
+This means denylist rules take priority over allowlist rules when both match. STACK rules are ignored here — they never block and never gate.
+
+#### `planNotificationDecision(rules, packageName, title, text, wasOngoing): NotificationDecision`
+
+Pure (no Android types) precedence resolver used by `NotificationBlockerService`. Same allowlist/denylist blocking logic as `shouldBlock`, plus:
+
+- First enabled STACK match wins; STACK never sets `hasAllowlistRules`
+- `shouldStack = !isBlocked && matchesStack && !wasOngoing` (a block always wins over STACK; ongoing notifications are excluded)
+- Returns `matchedRuleIndices` for `hitCount` increments and `matchedStackRule` (non-null only when `shouldStack`)
+
+Extracted as a pure function so the full precedence matrix is unit-testable on plain JVM (no Robolectric). `RuleMatcher` remains stateless.
+
+### `StackedNotificationManager` (`StackedNotificationManager.kt`)
+
+**Type:** Singleton object holding a volatile in-memory STACK registry.
+
+Implements cancel-and-repost: a `NotificationListenerService` cannot group another app's notification in place, so matching notifications are cancelled and re-posted under our own package as a native group (summary + children). Key design points:
+
+- **`groupKeyFor`** — one stack per *distinct full rule signature* (canonical length-prefixed serialization → hex SHA-256; `BlockerRule` has no stable id)
+- **`absorbAndPost`** — strictly transactional: precondition → `planAbsorb` (pure) → post child + summary → commit registry → post-commit eviction cleanup. Post-then-cancel ordering means a notification is never lost; rollback never cancels a reused same-`sbnKey` child
+- **`StackPoster` seam** — all Android side-effects (post/cancel/enabled/active) behind an interface, so the logic is JVM-testable with an in-memory fake
+- **Caps & lifecycle** — `MAX_CHILDREN_PER_STACK` / `MAX_STACKS` / `STACK_TTL_MS` eviction; `cumulativeCounts` for the true summary count; `reconcileOnConnect` clears orphaned stacks after a process restart
+- **Privacy** — source `visibility` is propagated; PRIVATE/SECRET/unknown get a redacted public version so lock-screen content isn't leaked
 
 ---
 
@@ -516,7 +545,8 @@ Entry point and root state holder for the application. Manages:
 
 **Features:**
 - Each rule card shows: app name, title filter, text filter
-- Rule type icon: Block icon for DENYLIST, checkmark for ALLOWLIST
+- Rule type icon: Block for DENYLIST, checkmark for ALLOWLIST, layers for STACK
+- STACK rules show an inline warning (with a one-tap fix) when notifications/the stack channel are disabled
 - Clock icon if time-limited via `AdvancedRuleConfig`
 - Hit count display
 - Disabled rules shown with strikethrough and reduced opacity
@@ -578,7 +608,7 @@ Displays an informational card with a button that opens Android's `ACTION_NOTIFI
 `RuleDialog` is a shared private composable used by both `AddRuleDialog` and `EditRuleDialog`:
 
 **Fields:**
-- Rule type selector: `DENYLIST` / `ALLOWLIST` (segmented button)
+- Rule type selector: `DENYLIST` / `ALLOWLIST` / `STACK` (3-segment button, localized labels via `RuleType.label()`)
 - Title filter text field with match type selector (`CONTAINS` / `REGEX`)
 - Text filter text field with match type selector (`CONTAINS` / `REGEX`)
 - "Advanced Configuration" button → opens `AdvancedRuleConfigDialog`
@@ -700,21 +730,19 @@ On each app launch:
 
 ### Unit Tests (`app/src/test/`)
 
+Unit tests run on plain JVM (no Robolectric). `testOptions.unitTests.isReturnDefaultValues = true` so stubbed `android.util.Log` calls don't throw.
+
 #### `RuleMatcherTest` (`RuleMatcherTest.kt`)
 
-9 test cases covering `RuleMatcher.shouldBlock()`:
+Covers `RuleMatcher.shouldBlock()` / `matches()`: no rules; denylist match/no-match; allowlist match and implicit block; denylist-over-allowlist priority; regex; disabled rules; the Mygate allowlist regex; plus STACK cases (STACK never blocks, STACK ≠ allowlist gating, STACK/DENYLIST filter parity).
 
-| Test | Scenario | Expected |
-|---|---|---|
-| No rules exist | Empty rule list | Not blocked |
-| Denylist title match | "Promo" matches "This is a Promo" | Blocked |
-| Denylist no match | "Promo" vs "Important Update" | Not blocked |
-| Allowlist match | "OTP" matches "Your OTP is 1234" | Not blocked |
-| Allowlist exists, no match | "OTP" vs "Promotional Content" | Blocked (implicit) |
-| Both match (priority) | Allowlist "Offer" + Denylist "Expired" | Blocked (denylist wins) |
-| Regex matching | `^[0-9]+$` matches "123456" but not "123abc456" | Correct |
-| Disabled rules | Disabled denylist rule | Not blocked |
-| Mygate regex | ALLOWLIST `.*(checked\|approval).*` | Not blocked for check-in |
+#### `NotificationDecisionTest` (`NotificationDecisionTest.kt`)
+
+Full precedence matrix for `planNotificationDecision`: stack-only matching/non-matching, denylist-wins-over-stack, allowlist-gating-wins, first-enabled-stack-match-wins, ongoing exclusion, other-package no-op, disabled stack rule.
+
+#### `StackedNotificationManagerTest` (`StackedNotificationManagerTest.kt`)
+
+`groupKeyFor` (identical/null-vs-empty/time-window/ruleType), pure `planAbsorb` (new vs update, per-stack cap eviction, visibility/redaction), and transactional `absorbAndPost` via an in-memory `FakeStackPoster`: typed `PostBlock`, disabled-poster no-op, same-key update/ping suppression, rollback (new child cancelled; reused-update child preserved), and `reconcileOnConnect` cancel-by-key + registry clear.
 
 Uses Mockito inline mock maker (configured via `test/resources/mockito-extensions/org.mockito.plugins.MockMaker`).
 

@@ -5,7 +5,8 @@ An Android app that filters and blocks unwanted notifications using customizable
 ## Features
 
 - **Notification Blocking** - Block notifications in real-time using Android's NotificationListenerService
-- **Flexible Rules** - Create denylist (block matching) or allowlist (allow only matching) rules
+- **Flexible Rules** - Create denylist (block matching), allowlist (allow only matching), or stack rules
+- **Notification Stacking** - STACK rules don't block; they collapse chatty apps into a single expandable notification group so you keep the notifications without the clutter
 - **Pattern Matching** - Match notification title/text using simple contains or regex patterns
 - **Time-Based Rules** - Schedule rules to activate only during specific time windows
 - **Prebuilt Rules** - 40+ pre-configured rules for popular apps (e-commerce promos, social media, etc.)

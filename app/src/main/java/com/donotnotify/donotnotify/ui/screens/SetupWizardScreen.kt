@@ -3,6 +3,8 @@ package com.donotnotify.donotnotify.ui.screens
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +60,7 @@ import com.donotnotify.donotnotify.setup.OemAutostart
 import com.donotnotify.donotnotify.setup.SetupState
 import kotlinx.coroutines.launch
 
-private enum class WizardStep { WELCOME, LISTENER, BATTERY, OEM, DONE }
+private enum class WizardStep { WELCOME, LISTENER, POST_NOTIF, BATTERY, OEM, DONE }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -73,18 +75,29 @@ fun SetupWizardScreen(
     var batteryIgnored by remember { mutableStateOf(SetupState.isIgnoringBatteryOptimizations(context)) }
     var oemSeen by remember { mutableStateOf(SetupState.hasSeenOemAutostart(context)) }
     var oemFailed by remember { mutableStateOf(false) }
+    var postNotifGranted by remember { mutableStateOf(SetupState.isPostNotificationsGranted(context)) }
 
     DisposableLifecycleResume(lifecycleOwner) {
         listenerEnabled = SetupState.isNotificationListenerEnabled(context)
         batteryIgnored = SetupState.isIgnoringBatteryOptimizations(context)
         oemSeen = SetupState.hasSeenOemAutostart(context)
+        postNotifGranted = SetupState.isPostNotificationsGranted(context)
     }
 
+    val postNotifLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted -> postNotifGranted = granted || SetupState.isPostNotificationsGranted(context) }
+
     val oemApplies = remember { OemAutostart.applies() }
-    val steps = remember(showWelcome, oemApplies) {
+    // The POST_NOTIFICATIONS step is only relevant on API 33+ when not yet granted;
+    // membership is fixed at first composition so the pager stays stable (a later
+    // grant just auto-advances the step).
+    val needsPostNotif = remember { SetupState.needsPostNotificationsStep(context) }
+    val steps = remember(showWelcome, oemApplies, needsPostNotif) {
         buildList {
             if (showWelcome) add(WizardStep.WELCOME)
             add(WizardStep.LISTENER)
+            if (needsPostNotif) add(WizardStep.POST_NOTIF)
             add(WizardStep.BATTERY)
             if (oemApplies) add(WizardStep.OEM)
             add(WizardStep.DONE)
@@ -105,9 +118,10 @@ fun SetupWizardScreen(
         }
     }
 
-    LaunchedEffect(listenerEnabled, batteryIgnored) {
+    LaunchedEffect(listenerEnabled, batteryIgnored, postNotifGranted) {
         val current = steps.getOrNull(pagerState.currentPage) ?: return@LaunchedEffect
         if (current == WizardStep.LISTENER && listenerEnabled) goNext()
+        else if (current == WizardStep.POST_NOTIF && postNotifGranted) goNext()
         else if (current == WizardStep.BATTERY && batteryIgnored) goNext()
     }
 
@@ -142,6 +156,14 @@ fun SetupWizardScreen(
                     enabled = listenerEnabled,
                     onOpenSettings = {
                         context.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                    },
+                )
+                WizardStep.POST_NOTIF -> PostNotifStep(
+                    granted = postNotifGranted,
+                    onRequest = {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            postNotifLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        }
                     },
                 )
                 WizardStep.BATTERY -> BatteryStep(
@@ -207,13 +229,14 @@ private fun canAdvance(
 ): Boolean = when (step) {
     WizardStep.WELCOME -> true
     WizardStep.LISTENER -> listenerEnabled
+    WizardStep.POST_NOTIF -> true
     WizardStep.BATTERY -> true
     WizardStep.OEM -> true
     WizardStep.DONE -> true
 }
 
 private fun canSkip(step: WizardStep): Boolean = when (step) {
-    WizardStep.BATTERY, WizardStep.OEM -> true
+    WizardStep.POST_NOTIF, WizardStep.BATTERY, WizardStep.OEM -> true
     else -> false
 }
 
@@ -325,6 +348,18 @@ private fun ListenerStep(enabled: Boolean, onOpenSettings: () -> Unit) {
         statusText = if (enabled) stringResource(R.string.setup_listener_granted) else null,
         actionLabel = if (enabled) null else stringResource(R.string.setup_listener_cta),
         onAction = if (enabled) null else onOpenSettings,
+    )
+}
+
+@Composable
+private fun PostNotifStep(granted: Boolean, onRequest: () -> Unit) {
+    StepCard(
+        icon = if (granted) Icons.Default.NotificationsActive else Icons.Default.NotificationsOff,
+        title = stringResource(R.string.setup_post_notif_title),
+        body = stringResource(R.string.setup_post_notif_body),
+        statusText = if (granted) stringResource(R.string.setup_post_notif_granted) else null,
+        actionLabel = if (granted) null else stringResource(R.string.setup_post_notif_cta),
+        onAction = if (granted) null else onRequest,
     )
 }
 

@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -246,6 +247,7 @@ private fun PrebuiltRuleCard(
     val actionText = when (rule.ruleType) {
         RuleType.DENYLIST -> stringResource(R.string.blocks_notifications_containing)
         RuleType.ALLOWLIST -> stringResource(R.string.allows_only_notifications_containing)
+        RuleType.STACK -> stringResource(R.string.stacks_notifications_containing)
     }
 
     val unknownApp = stringResource(R.string.unknown_app)
@@ -275,7 +277,11 @@ private fun PrebuiltRuleCard(
                     )
                 } else {
                     Icon(
-                        imageVector = if (rule.ruleType == RuleType.DENYLIST) Icons.Filled.Block else Icons.Filled.CheckCircle,
+                        imageVector = when (rule.ruleType) {
+                            RuleType.DENYLIST -> Icons.Filled.Block
+                            RuleType.ALLOWLIST -> Icons.Filled.CheckCircle
+                            RuleType.STACK -> Icons.Filled.Layers
+                        },
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -343,10 +349,12 @@ private fun KeywordChip(keyword: String, ruleType: RuleType) {
     val backgroundColor = when (ruleType) {
         RuleType.DENYLIST -> MaterialTheme.colorScheme.errorContainer
         RuleType.ALLOWLIST -> MaterialTheme.colorScheme.primaryContainer
+        RuleType.STACK -> MaterialTheme.colorScheme.secondaryContainer
     }
     val textColor = when (ruleType) {
         RuleType.DENYLIST -> MaterialTheme.colorScheme.onErrorContainer
         RuleType.ALLOWLIST -> MaterialTheme.colorScheme.onPrimaryContainer
+        RuleType.STACK -> MaterialTheme.colorScheme.onSecondaryContainer
     }
 
     Box(
@@ -377,6 +385,11 @@ private fun RuleTypeBadge(ruleType: RuleType) {
             Icons.Filled.CheckCircle,
             stringResource(R.string.allowlist),
             MaterialTheme.colorScheme.primary
+        )
+        RuleType.STACK -> Triple(
+            Icons.Filled.Layers,
+            stringResource(R.string.stack),
+            MaterialTheme.colorScheme.secondary
         )
     }
 
