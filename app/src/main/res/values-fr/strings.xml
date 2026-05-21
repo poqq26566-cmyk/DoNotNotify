@@ -218,6 +218,9 @@ The rule will then appear here and apply to matching notifications automatically
     <string name="toast_resumed_monitoring">Surveillance de %s reprise</string>
     <string name="stacks_notifications_containing">Stacks notifications containing:</string>
     <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">Bloque toutes les notifications correspondant à cette règle.</string>
+    <string name="rule_type_desc_allowlist">N\'autorise que les notifications correspondant à cette règle. Toutes les autres de cette application sont bloquées.</string>
+    <string name="rule_type_desc_stack">Regroupe les notifications correspondantes en un seul résumé. Les originaux sont supprimés.</string>
     <string name="stack_channel_name">Stacked notifications</string>
     <string name="stack_channel_description">Grouped notifications collected by your stack rules.</string>
     <string name="stack_summary_count">%d notifications</string>

@@ -87,6 +87,9 @@
     <string name="denylist">Denylist</string>
     <string name="allowlist">Allowlist</string>
     <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">Block all notifications matching this rule.</string>
+    <string name="rule_type_desc_allowlist">Only allow notifications matching this rule. All others from this app are blocked.</string>
+    <string name="rule_type_desc_stack">Group matching notifications into one summary. The originals are dismissed.</string>
 
     <!-- Stacked notifications -->
     <string name="stack_channel_name">Stacked notifications</string>

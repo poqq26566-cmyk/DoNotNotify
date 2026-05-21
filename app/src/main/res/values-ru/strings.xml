@@ -218,6 +218,9 @@ The rule will then appear here and apply to matching notifications automatically
     <string name="toast_resumed_monitoring">Мониторинг %s возобновлён</string>
     <string name="stacks_notifications_containing">Stacks notifications containing:</string>
     <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">Блокирует все уведомления, соответствующие этому правилу.</string>
+    <string name="rule_type_desc_allowlist">Разрешает только уведомления, соответствующие этому правилу. Все остальные из этого приложения блокируются.</string>
+    <string name="rule_type_desc_stack">Группирует подходящие уведомления в одно сводное уведомление. Оригиналы удаляются.</string>
     <string name="stack_channel_name">Stacked notifications</string>
     <string name="stack_channel_description">Grouped notifications collected by your stack rules.</string>
     <string name="stack_summary_count">%d notifications</string>
