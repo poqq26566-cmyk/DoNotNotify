@@ -57,9 +57,17 @@
     <!-- Rules screen -->
     <string name="no_rules_created">ルールが作成されていません</string>
     <string name="no_rules_created_desc">不要な通知を自動的にブロックするルールを作成しましょう。「履歴」タブで通知をタップしてルールを作成するか、プリセットルールを利用してください。</string>
-    <string name="rules_auto_block_desc">以下のルールに一致する通知は自動的にブロックされます。</string>
+    <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
     <string name="how_to_add_rule">新しいルールの追加方法</string>
-    <string name="how_to_add_rule_desc">新しいルールを作成するには:\n\n1.「履歴」タブに切り替えます\n2. ブロックしたい通知を見つけます\n3. その通知をタップします\n4.「ルールを作成」を選択します\n5. 必要に応じてルール設定をカスタマイズします\n\nルールはここに表示され、一致する通知を自動的にブロックします。</string>
+    <string name="how_to_add_rule_desc">To create a new rule:
+
+1. Switch to the \"History\" tab
+2. Find a notification you want a rule for
+3. Tap on the notification
+4. Select \"Create Rule\" from the options
+5. Customize the rule settings as needed
+
+The rule will then appear here and apply to matching notifications automatically.</string>
     <string name="add_new_rule">新しいルールを追加</string>
     <string name="browse_prebuilt_rules">プリセットルールを閲覧</string>
     <string name="hits_count">ヒット数: %d</string>
@@ -208,4 +216,19 @@
     <string name="toast_action_unavailable">通知アクションは利用できなくなりました</string>
     <string name="toast_stopped_monitoring">%sの監視を停止しました</string>
     <string name="toast_resumed_monitoring">%sの監視を再開しました</string>
+    <string name="stacks_notifications_containing">Stacks notifications containing:</string>
+    <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">このルールに一致するすべての通知をブロックします。</string>
+    <string name="rule_type_desc_allowlist">このルールに一致する通知のみを許可します。このアプリからの他の通知はすべてブロックされます。</string>
+    <string name="rule_type_desc_stack">一致する通知を1つのサマリーにまとめます。元の通知は削除されます。</string>
+    <string name="stack_channel_name">Stacked notifications</string>
+    <string name="stack_channel_description">Grouped notifications collected by your stack rules.</string>
+    <string name="stack_summary_count">%d notifications</string>
+    <string name="stack_overflow_more">+%d more</string>
+    <string name="stack_warning_notifications_disabled">Stacking inactive — notifications are turned off for DoNotNotify. Tap to enable.</string>
+    <string name="stack_warning_channel_disabled">Stacking inactive — the stacked-notifications channel is disabled. Tap to enable.</string>
+    <string name="setup_post_notif_title">Allow DoNotNotify to post notifications</string>
+    <string name="setup_post_notif_body">Stack rules re-post grouped notifications under DoNotNotify. Android 13+ requires you to allow this app to post notifications, or stacking will be inactive.</string>
+    <string name="setup_post_notif_cta">Allow notifications</string>
+    <string name="setup_post_notif_granted">Allowed</string>
 </resources>

@@ -57,9 +57,17 @@
     <!-- Rules screen -->
     <string name="no_rules_created">Brak reguł</string>
     <string name="no_rules_created_desc">Twórz reguły, aby automatycznie blokować niechciane powiadomienia. Dotknij powiadomienia na karcie Historia, aby utworzyć regułę, lub przeglądaj gotowe reguły.</string>
-    <string name="rules_auto_block_desc">Wszystkie powiadomienia pasujące do poniższych reguł będą automatycznie blokowane.</string>
+    <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
     <string name="how_to_add_rule">Jak dodać nową regułę</string>
-    <string name="how_to_add_rule_desc">Aby utworzyć nową regułę:\n\n1. Przejdź do karty „Historia"\n2. Znajdź powiadomienie, które chcesz zablokować\n3. Dotknij powiadomienia\n4. Wybierz „Utwórz regułę" z opcji\n5. Dostosuj ustawienia reguły według potrzeb\n\nReguła pojawi się tutaj i będzie automatycznie blokować pasujące powiadomienia.</string>
+    <string name="how_to_add_rule_desc">To create a new rule:
+
+1. Switch to the \"History\" tab
+2. Find a notification you want a rule for
+3. Tap on the notification
+4. Select \"Create Rule\" from the options
+5. Customize the rule settings as needed
+
+The rule will then appear here and apply to matching notifications automatically.</string>
     <string name="add_new_rule">Dodaj nową regułę</string>
     <string name="browse_prebuilt_rules">Przeglądaj gotowe reguły</string>
     <string name="hits_count">Trafień: %d</string>
@@ -208,4 +216,19 @@
     <string name="toast_action_unavailable">Akcja powiadomienia jest już niedostępna</string>
     <string name="toast_stopped_monitoring">Zatrzymano monitorowanie %s</string>
     <string name="toast_resumed_monitoring">Wznowiono monitorowanie %s</string>
+    <string name="stacks_notifications_containing">Stacks notifications containing:</string>
+    <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">Blokuje wszystkie powiadomienia pasujące do tej reguły.</string>
+    <string name="rule_type_desc_allowlist">Zezwala tylko na powiadomienia pasujące do tej reguły. Wszystkie inne z tej aplikacji są blokowane.</string>
+    <string name="rule_type_desc_stack">Grupuje pasujące powiadomienia w jedno podsumowanie. Oryginały są odrzucane.</string>
+    <string name="stack_channel_name">Stacked notifications</string>
+    <string name="stack_channel_description">Grouped notifications collected by your stack rules.</string>
+    <string name="stack_summary_count">%d notifications</string>
+    <string name="stack_overflow_more">+%d more</string>
+    <string name="stack_warning_notifications_disabled">Stacking inactive — notifications are turned off for DoNotNotify. Tap to enable.</string>
+    <string name="stack_warning_channel_disabled">Stacking inactive — the stacked-notifications channel is disabled. Tap to enable.</string>
+    <string name="setup_post_notif_title">Allow DoNotNotify to post notifications</string>
+    <string name="setup_post_notif_body">Stack rules re-post grouped notifications under DoNotNotify. Android 13+ requires you to allow this app to post notifications, or stacking will be inactive.</string>
+    <string name="setup_post_notif_cta">Allow notifications</string>
+    <string name="setup_post_notif_granted">Allowed</string>
 </resources>

@@ -306,6 +306,8 @@ class MainActivity : ComponentActivity() {
         notificationToShowDetailsDialog?.let { notification ->
             val actualBlockingRule = remember(notification, rules) {
                 val rulesForPackage = rules.filter { it.packageName == notification.packageName && it.isEnabled }
+                // STACK rules are intentionally excluded: they do not block, so a
+                // stack-only match correctly leaves the blocking-rule resolution null.
                 val allowlistRules = rulesForPackage.filter { it.ruleType == RuleType.ALLOWLIST }
                 val denylistRules = rulesForPackage.filter { it.ruleType == RuleType.DENYLIST }
 

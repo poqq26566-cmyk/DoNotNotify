@@ -33,6 +33,28 @@ class NotificationBlockerService : NotificationListenerService() {
         Thread(r, "history-writer").apply { isDaemon = true }
     }
 
+    private val stackPoster: StackedNotificationManager.StackPoster by lazy {
+        StackedNotificationManager.AndroidStackPoster(
+            context = this,
+            activeProvider = {
+                try {
+                    (activeNotifications ?: emptyArray()).asList()
+                        .filter { it.packageName == BuildConfig.APPLICATION_ID }
+                        .map {
+                            StackedNotificationManager.ActiveStackNote(
+                                listenerKey = it.key,
+                                groupKey = it.notification.group ?: ""
+                            )
+                        }
+                } catch (e: Exception) {
+                    Log.w(TAG, "activeNotifications unavailable", e)
+                    emptyList()
+                }
+            },
+            keyCanceller = { key -> cancelNotification(key) }
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
         ruleStorage = RuleStorage(this)
@@ -48,6 +70,11 @@ class NotificationBlockerService : NotificationListenerService() {
         if (sbn == null) return
 
         val packageName = sbn.packageName
+
+        // Reentrancy guard (FIRST): our own re-posted stack notifications must never
+        // re-enter rule/history/stack processing or we recurse infinitely.
+        if (packageName == BuildConfig.APPLICATION_ID) return
+
         val notification = sbn.notification
         val title = notification.extras.getCharSequence("android.title")?.toString()
         val text = notification.extras.getCharSequence("android.text")?.toString()
@@ -90,49 +117,53 @@ class NotificationBlockerService : NotificationListenerService() {
 
         Log.i(TAG, "Notification Received: App='${appLabel}', Title='${title}', Text='${text}'")
 
-        // Single-loop rule evaluation — eliminates intermediate list allocations
+        // Pure precedence resolution (DENYLIST/allowlist-gating wins over STACK;
+        // first enabled match wins; STACK never gates like allowlist).
         val rules = ruleStorage.getRules()
-        var hasAllowlistRules = false
-        var matchesAllowlist = false
-        var matchesDenylist = false
-        var matchedDenylistRule: BlockerRule? = null
-        val matchedRuleIndices = mutableListOf<Int>()
+        val wasOngoing = (sbn.notification.flags and Notification.FLAG_ONGOING_EVENT) != 0
+        val decision = RuleMatcher.planNotificationDecision(rules, packageName, title, text, wasOngoing)
+        val isBlocked = decision.isBlocked
+        val matchedRule: BlockerRule? = decision.matchedDenylistRule
+        val matchedRuleIndices = decision.matchedRuleIndices
 
-        for ((index, rule) in rules.withIndex()) {
-            if (rule.packageName != packageName || !rule.isEnabled) continue
-            when (rule.ruleType) {
-                RuleType.ALLOWLIST -> {
-                    hasAllowlistRules = true
-                    if (!matchesAllowlist && RuleMatcher.matches(rule, packageName, title, text)) {
-                        matchesAllowlist = true
-                        matchedRuleIndices.add(index)
-                    }
-                }
-                RuleType.DENYLIST -> {
-                    if (!matchesDenylist && RuleMatcher.matches(rule, packageName, title, text)) {
-                        matchesDenylist = true
-                        matchedDenylistRule = rule
-                        matchedRuleIndices.add(index)
-                    }
-                }
-            }
-        }
-
-        val isBlocked = (hasAllowlistRules && !matchesAllowlist) || matchesDenylist
-        val matchedRule: BlockerRule? = if (matchesDenylist) matchedDenylistRule else null
-
-        if (isBlocked && !matchesDenylist) {
+        if (isBlocked && matchedRule == null) {
             Log.i(TAG, "Blocking notification from $packageName because it did not match any allowlist rule.")
         }
 
-        // Cancel immediately on binder thread
-        val wasOngoing = (sbn.notification.flags and Notification.FLAG_ONGOING_EVENT) != 0
         if (isBlocked) {
+            // Cancel immediately on binder thread
             if (wasOngoing) {
                 Log.w(TAG, "Attempting to block an ongoing notification. Cancellation may not be possible. Key: ${sbn.key}")
             }
             Log.i(TAG, "Blocking notification from $packageName. Matched rule: $matchedRule")
             cancelNotification(sbn.key)
+        } else if (decision.shouldStack) {
+            // STACK: post the replacement FIRST; only cancel the source if the
+            // re-post succeeded (post-then-cancel — never lose a notification).
+            val stackRule = decision.matchedStackRule!!
+            val groupKey = StackedNotificationManager.groupKeyFor(packageName, stackRule)
+            // Resolve the large-icon bitmap from cached storage before the lock
+            // (no PackageManager call on the binder thread).
+            val largeIcon = appInfoStorage.getAppIcon(packageName)
+            val entry = StackedNotificationManager.Entry(
+                sbnKey = sbn.key,
+                title = title,
+                text = text,
+                timestamp = currentTime,
+                contentIntent = sbn.notification.contentIntent,
+                sourceVisibility = sbn.notification.visibility,
+                childId = 0
+            )
+            val posted = StackedNotificationManager.absorbAndPost(
+                stackPoster, groupKey, appLabel, entry, largeIcon
+            )
+            if (posted) {
+                cancelNotification(sbn.key)
+            } else {
+                Log.w(TAG, "Stack post failed/blocked; leaving source intact: $packageName")
+            }
+            // Stacked notifications are NOT "blocked": they fall through to the
+            // normal-history branch below (blocked count is not incremented).
         }
 
         // Prepare hitCount updates (deferred toMutableList only when needed)
@@ -203,6 +234,26 @@ class NotificationBlockerService : NotificationListenerService() {
         super.onListenerConnected()
         SetupState.recordListenerConnected(this)
         Log.i(TAG, "Listener connected")
+        // Restart-safety: cancel any of our own stacks that survived a process
+        // restart and clear the in-memory registry (no orphans / no id reuse).
+        try {
+            StackedNotificationManager.reconcileOnConnect(stackPoster)
+        } catch (e: Exception) {
+            Log.w(TAG, "reconcileOnConnect failed", e)
+        }
+    }
+
+    override fun onNotificationRemoved(sbn: StatusBarNotification?) {
+        super.onNotificationRemoved(sbn)
+        if (sbn == null || sbn.packageName != BuildConfig.APPLICATION_ID) return
+        // One of our own stack notifications was dismissed — keep the registry in sync.
+        try {
+            StackedNotificationManager.onOurNotificationRemoved(
+                stackPoster, sbn.id, getString(R.string.app_name)
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "onOurNotificationRemoved failed", e)
+        }
     }
 
     override fun onListenerDisconnected() {

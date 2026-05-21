@@ -226,14 +226,32 @@ private fun RuleDialog(
                         SegmentedButton(
                             selected = ruleType == type,
                             onClick = { ruleType = type },
+                            modifier = Modifier.weight(1f),
                             shape = SegmentedButtonDefaults.itemShape(index = index, count = RuleType.entries.size),
                         ) {
-                            Text(type.name)
+                            Text(
+                                text = type.label(),
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelSmall
+                            )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.padding(vertical = 8.dp))
+                Text(
+                    text = stringResource(
+                        when (ruleType) {
+                            RuleType.DENYLIST -> R.string.rule_type_desc_denylist
+                            RuleType.ALLOWLIST -> R.string.rule_type_desc_allowlist
+                            RuleType.STACK -> R.string.rule_type_desc_stack
+                        }
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp)
+                )
+
+                Spacer(modifier = Modifier.padding(vertical = 4.dp))
 
                 TextField(
                     value = titleFilter,

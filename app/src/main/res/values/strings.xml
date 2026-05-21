@@ -57,9 +57,9 @@
     <!-- Rules screen -->
     <string name="no_rules_created">No Rules Created</string>
     <string name="no_rules_created_desc">Create rules to automatically block unwanted notifications. Tap a notification in the History tab to create a rule, or browse pre-built rules.</string>
-    <string name="rules_auto_block_desc">Any notifications matching the rules given below will be blocked automatically.</string>
+    <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
     <string name="how_to_add_rule">How to Add a New Rule</string>
-    <string name="how_to_add_rule_desc">To create a new rule:\n\n1. Switch to the \"History\" tab\n2. Find a notification you want to block\n3. Tap on the notification\n4. Select \"Create Rule\" from the options\n5. Customize the rule settings as needed\n\nThe rule will then appear here and automatically block matching notifications.</string>
+    <string name="how_to_add_rule_desc">To create a new rule:\n\n1. Switch to the \"History\" tab\n2. Find a notification you want a rule for\n3. Tap on the notification\n4. Select \"Create Rule\" from the options\n5. Customize the rule settings as needed\n\nThe rule will then appear here and apply to matching notifications automatically.</string>
     <string name="add_new_rule">Add a New Rule</string>
     <string name="browse_prebuilt_rules">Browse Pre-built Rules</string>
     <string name="hits_count">Hits: %d</string>
@@ -83,8 +83,21 @@
     <string name="all_rules_added">You\'ve already added all available rules for your installed apps, or no supported apps are installed.</string>
     <string name="blocks_notifications_containing">Blocks notifications containing:</string>
     <string name="allows_only_notifications_containing">Allows only notifications containing:</string>
+    <string name="stacks_notifications_containing">Stacks notifications containing:</string>
     <string name="denylist">Denylist</string>
     <string name="allowlist">Allowlist</string>
+    <string name="stack">Stack</string>
+    <string name="rule_type_desc_denylist">Block all notifications matching this rule.</string>
+    <string name="rule_type_desc_allowlist">Only allow notifications matching this rule. All others from this app are blocked.</string>
+    <string name="rule_type_desc_stack">Group matching notifications into one summary. The originals are dismissed.</string>
+
+    <!-- Stacked notifications -->
+    <string name="stack_channel_name">Stacked notifications</string>
+    <string name="stack_channel_description">Grouped notifications collected by your stack rules.</string>
+    <string name="stack_summary_count">%d notifications</string>
+    <string name="stack_overflow_more">+%d more</string>
+    <string name="stack_warning_notifications_disabled">Stacking inactive — notifications are turned off for DoNotNotify. Tap to enable.</string>
+    <string name="stack_warning_channel_disabled">Stacking inactive — the stacked-notifications channel is disabled. Tap to enable.</string>
     <string name="unknown_app">Unknown</string>
 
     <!-- Enable notification listener screen -->
@@ -183,6 +196,11 @@
     <string name="setup_oem_cta">Open settings</string>
     <string name="setup_oem_done">I\'ve done this</string>
     <string name="setup_oem_failed">Couldn\'t open the settings screen. Please find the autostart or background-activity settings on your phone manually and allow DoNotNotify.</string>
+
+    <string name="setup_post_notif_title">Allow DoNotNotify to post notifications</string>
+    <string name="setup_post_notif_body">Stack rules re-post grouped notifications under DoNotNotify. Android 13+ requires you to allow this app to post notifications, or stacking will be inactive.</string>
+    <string name="setup_post_notif_cta">Allow notifications</string>
+    <string name="setup_post_notif_granted">Allowed</string>
 
     <string name="setup_done_title">All set</string>
     <string name="setup_done_body">DoNotNotify will run in the background and filter notifications. We\'ll periodically check that everything is still working — if your phone shuts the app down, you\'ll get a notification to fix it.</string>

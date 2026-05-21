@@ -1,8 +1,11 @@
 package com.donotnotify.donotnotify.setup
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.PowerManager
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 
 object SetupState {
     const val CURRENT_SETUP_VERSION = 1
@@ -17,6 +20,19 @@ object SetupState {
         val enabled = NotificationManagerCompat.getEnabledListenerPackages(context)
         return enabled.contains(context.packageName)
     }
+
+    /** API < 33 grants POST_NOTIFICATIONS implicitly; 33+ requires a runtime grant. */
+    fun isPostNotificationsGranted(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
+        return ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    /** True only when the runtime permission step is relevant (33+, not yet granted). */
+    fun needsPostNotificationsStep(context: Context): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !isPostNotificationsGranted(context)
 
     fun isIgnoringBatteryOptimizations(context: Context): Boolean {
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager

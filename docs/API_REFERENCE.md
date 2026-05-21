@@ -31,7 +31,7 @@ Parcelable data class representing a notification filtering rule.
 | `textFilter` | `String?` | `null` | Pattern for matching notification text body. Null/blank = match all. |
 | `textMatchType` | `MatchType` | `CONTAINS` | How to evaluate `textFilter` |
 | `hitCount` | `Int` | `0` | Number of times this rule has matched a notification |
-| `ruleType` | `RuleType` | `DENYLIST` | Whether this rule blocks or allowlists |
+| `ruleType` | `RuleType` | `DENYLIST` | Whether this rule blocks, allowlists, or stacks |
 | `isEnabled` | `Boolean` | `true` | Whether the rule is currently active |
 | `advancedConfig` | `AdvancedRuleConfig?` | `null` | Optional time-window scheduling |
 
@@ -48,6 +48,7 @@ Parcelable data class representing a notification filtering rule.
 |---|---|
 | `DENYLIST` | Block notifications that match this rule |
 | `ALLOWLIST` | Allow only matching notifications; implicitly block non-matching ones for this package |
+| `STACK` | Don't block — cancel the source notification and re-post matching ones as a single native notification group (summary + children). Serialized with `@SerializedName(value = "STACK", alternate = ["GROUP", "STACKED"])` |
 
 ### `AdvancedRuleConfig` (`BlockerRule.kt`)
 
@@ -124,8 +125,28 @@ Stateless rule evaluation engine.
 
 | Method | Parameters | Returns | Description |
 |---|---|---|---|
-| `matches(rule, packageName, title, text)` | `BlockerRule`, `String?`, `String?`, `String?` | `Boolean` | Evaluates a single rule against notification data. Checks time window, package match, title match, and text match. Returns `false` on regex errors. |
-| `shouldBlock(packageName, title, text, rules)` | `String`, `String?`, `String?`, `List<BlockerRule>` | `Boolean` | Evaluates all rules for a package. Returns `true` if notification should be blocked. Logic: `(hasAllowlist && !matchesAllowlist) \|\| matchesDenylist`. |
+| `matches(rule, packageName, title, text)` | `BlockerRule`, `String?`, `String?`, `String?` | `Boolean` | Evaluates a single rule against notification data. Checks time window, package match, title match, and text match. Returns `false` on regex errors. STACK rules match identically to DENYLIST/ALLOWLIST rules with the same filters. |
+| `shouldBlock(packageName, title, text, rules)` | `String`, `String?`, `String?`, `List<BlockerRule>` | `Boolean` | Evaluates all rules for a package. Returns `true` if notification should be blocked. Logic: `(hasAllowlist && !matchesAllowlist) \|\| matchesDenylist`. STACK rules never block and never gate. |
+| `planNotificationDecision(rules, packageName, title, text, wasOngoing)` | `List<BlockerRule>`, `String`, `String?`, `String?`, `Boolean` | `NotificationDecision` | Pure precedence resolution used by the service. Returns `isBlocked`, `matchedDenylistRule`, `shouldStack`, `matchedStackRule`, `matchedRuleIndices`. First enabled match wins per type; a block wins over STACK; `wasOngoing` suppresses stacking. Extracted to keep the precedence matrix JVM-testable. |
+
+### `NotificationDecision` (data class, `RuleMatcher.kt`)
+
+Plain result of `planNotificationDecision` (no Android types): `isBlocked: Boolean`, `matchedDenylistRule: BlockerRule?`, `shouldStack: Boolean`, `matchedStackRule: BlockerRule?` (non-null only when `shouldStack`), `matchedRuleIndices: List<Int>` (rules to bump `hitCount` for).
+
+### `StackedNotificationManager` (`StackedNotificationManager.kt`)
+
+**Type:** Singleton `object` (volatile in-memory STACK registry).
+
+| Member | Returns | Description |
+|---|---|---|
+| `groupKeyFor(packageName, rule)` | `String` | Stable key per distinct full rule signature: canonical length-prefixed serialization → hex SHA-256. One stack per signature. |
+| `planAbsorb(snapshot, entry, now, idAllocator, maxChildren)` | `AbsorbPlan` | Pure: child id (reuse on same `sbnKey`), update/ping flags, cumulative count, evictions, visibility/redaction, summary lines. No Android types. |
+| `absorbAndPost(poster, groupKey, appLabel, entry, largeIcon)` | `Boolean` | Transactional: precondition → plan → post → commit → post-commit cleanup. Returns `true` only when child **and** summary are posted and committed; the caller cancels the source only then. |
+| `canPost(context)` / `postBlockVia(poster)` | `PostBlock` | Typed post-capability (`OK` / `NOTIFICATIONS_DISABLED` / `CHANNEL_DISABLED`). `canPost` is UI-only; `postBlockVia` is the JVM-testable path used internally. |
+| `onOurNotificationRemoved(poster, removedId, appLabel)` | — | Keeps the registry in sync when one of our stack notifications is dismissed (summary → clear group; child → rebuild). |
+| `reconcileOnConnect(poster)` | — | On listener (re)connect, cancels surviving `dnn_stack:` notifications by listener key and clears the registry (restart-safety). |
+
+`StackPoster` is the side-effect seam (`areEnabled`, `channelImportance`, `activeStackNotifications`, `postChild`, `postSummary`, `cancel`, `cancelByKey`) with a real `AndroidStackPoster` impl and an in-memory fake for tests.
 
 ---
 

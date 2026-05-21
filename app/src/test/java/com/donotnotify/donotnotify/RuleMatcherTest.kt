@@ -1,5 +1,6 @@
 package com.donotnotify.donotnotify
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -110,6 +111,42 @@ class RuleMatcherTest {
         val rules = listOf(rule)
 
         assertFalse(RuleMatcher.shouldBlock("com.example.app", "Promo Code", "Text", rules))
+    }
+
+    @Test
+    fun `stack rule alone never blocks`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "News",
+            ruleType = RuleType.STACK
+        )
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "News flash", "Text", listOf(rule)))
+    }
+
+    @Test
+    fun `stack rule does not gate like an allowlist`() {
+        // Only a STACK rule present; a non-matching notification must NOT be blocked.
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "News",
+            ruleType = RuleType.STACK
+        )
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "Unrelated", "Text", listOf(rule)))
+    }
+
+    @Test
+    fun `stack and denylist with identical filters match identically`() {
+        val stack = BlockerRule(packageName = "p", titleFilter = "Promo", ruleType = RuleType.STACK)
+        val deny = BlockerRule(packageName = "p", titleFilter = "Promo", ruleType = RuleType.DENYLIST)
+        assertTrue(RuleMatcher.matches(stack, "p", "Big Promo", "x"))
+        assertEquals(
+            RuleMatcher.matches(deny, "p", "Big Promo", "x"),
+            RuleMatcher.matches(stack, "p", "Big Promo", "x")
+        )
+        assertEquals(
+            RuleMatcher.matches(deny, "p", "Nope", "x"),
+            RuleMatcher.matches(stack, "p", "Nope", "x")
+        )
     }
 
     @Test

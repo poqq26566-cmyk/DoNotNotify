@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.AccessAlarms
+import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.automirrored.outlined.Rule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -30,9 +31,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import com.donotnotify.donotnotify.BlockerRule
 import com.donotnotify.donotnotify.R
 import com.donotnotify.donotnotify.RuleType
+import com.donotnotify.donotnotify.StackedNotificationManager
 import com.donotnotify.donotnotify.ui.components.EmptyState
 
 @Composable
@@ -197,6 +203,48 @@ private fun RuleCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (rule.ruleType == RuleType.STACK) {
+                    val context = LocalContext.current
+                    val postBlock = StackedNotificationManager.canPost(context)
+                    if (postBlock != StackedNotificationManager.PostBlock.OK) {
+                        val warning = when (postBlock) {
+                            StackedNotificationManager.PostBlock.CHANNEL_DISABLED ->
+                                stringResource(R.string.stack_warning_channel_disabled)
+                            else ->
+                                stringResource(R.string.stack_warning_notifications_disabled)
+                        }
+                        Text(
+                            text = warning,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .clickable {
+                                    runCatching {
+                                        val intent = when {
+                                            postBlock == StackedNotificationManager.PostBlock.CHANNEL_DISABLED &&
+                                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ->
+                                                Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                                                    .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                                    .putExtra(
+                                                        Settings.EXTRA_CHANNEL_ID,
+                                                        StackedNotificationManager.CHANNEL_ID
+                                                    )
+                                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ->
+                                                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                                    .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                            else ->
+                                                Intent(
+                                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                                    android.net.Uri.fromParts("package", context.packageName, null)
+                                                )
+                                        }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        context.startActivity(intent)
+                                    }
+                                }
+                        )
+                    }
+                }
             }
             if (rule.advancedConfig?.isTimeLimitEnabled == true) {
                 Icon(
@@ -210,7 +258,11 @@ private fun RuleCard(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 8.dp)
             ) {
-                val icon = if (rule.ruleType == RuleType.DENYLIST) Icons.Filled.Block else Icons.Filled.CheckCircle
+                val icon = when (rule.ruleType) {
+                    RuleType.DENYLIST -> Icons.Filled.Block
+                    RuleType.ALLOWLIST -> Icons.Filled.CheckCircle
+                    RuleType.STACK -> Icons.Filled.Layers
+                }
                 Icon(
                     imageVector = icon,
                     contentDescription = rule.ruleType.name
