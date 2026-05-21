@@ -509,9 +509,7 @@ object StackedNotificationManager {
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                 .setOnlyAlertOnce(plan.isUpdate)
                 .setVisibility(plan.effectiveVisibility)
-                // Fall back to launching the app when the source notification
-                // carried no contentIntent (e.g. MessagingStyle/RemoteInput-only).
-                .setContentIntent(entry.contentIntent ?: appLaunchIntent(plan.childId))
+                .setContentIntent(entry.contentIntent ?: sourceLaunchIntent(groupKey, plan.childId))
             largeIcon?.let { builder.setLargeIcon(it) }
             if (plan.redactPublic) {
                 builder.setPublicVersion(redactedPublic(groupKey, appLabel, plan.cumulativeCount))
