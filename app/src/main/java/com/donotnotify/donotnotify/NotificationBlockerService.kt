@@ -188,7 +188,7 @@ class NotificationBlockerService : NotificationListenerService() {
         } else null
 
         // Debounce check on binder thread
-        val notificationKey = "$packageName:$title:$text"
+        val notificationKey = sbn.key
         val isDuplicate = recentlyBlocked.containsKey(notificationKey) && currentTime - (recentlyBlocked[notificationKey] ?: 0) < DEBOUNCE_PERIOD_MS
 
         if (isDuplicate) {
