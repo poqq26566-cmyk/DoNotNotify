@@ -24,6 +24,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -55,7 +57,8 @@ fun RulesScreen(
     rules: List<BlockerRule>,
     onRuleClick: (BlockerRule) -> Unit,
     onDeleteRuleClick: (BlockerRule) -> Unit, // This lambda is no longer directly used for UI, but kept for consistency if needed elsewhere.
-    onBrowsePrebuiltRulesClick: () -> Unit
+    onBrowsePrebuiltRulesClick: () -> Unit,
+    onToggleAllRules: (Boolean) -> Unit
 ) {
     var showAddRuleDialog by remember { mutableStateOf(false) }
 
@@ -93,13 +96,31 @@ fun RulesScreen(
             }
         } else {
             item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.rules_master_switch_label),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = rules.all { it.isEnabled },
+                        onCheckedChange = onToggleAllRules
+                    )
+                }
+                HorizontalDivider()
                 Text(
                     text = stringResource(R.string.rules_auto_block_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 12.dp)
                 )
             }
             grouped.forEach { (_, appRules) ->

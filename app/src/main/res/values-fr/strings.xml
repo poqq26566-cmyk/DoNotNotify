@@ -58,6 +58,7 @@
     <string name="no_rules_created">Aucune règle créée</string>
     <string name="no_rules_created_desc">Créez des règles pour bloquer automatiquement les notifications indésirables. Appuyez sur une notification dans l\'onglet Historique pour créer une règle, ou parcourez les règles prédéfinies.</string>
     <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
+    <string name="rules_master_switch_label">Toutes les règles actives</string>
     <string name="how_to_add_rule">Comment ajouter une nouvelle règle</string>
     <string name="how_to_add_rule_desc">To create a new rule:
 

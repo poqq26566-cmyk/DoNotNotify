@@ -58,6 +58,7 @@
     <string name="no_rules_created">Правила не созданы</string>
     <string name="no_rules_created_desc">Создайте правила для автоматической блокировки нежелательных уведомлений. Нажмите на уведомление на вкладке «История», чтобы создать правило, или просмотрите готовые правила.</string>
     <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
+    <string name="rules_master_switch_label">Все правила активны</string>
     <string name="how_to_add_rule">Как добавить новое правило</string>
     <string name="how_to_add_rule_desc">To create a new rule:
 
