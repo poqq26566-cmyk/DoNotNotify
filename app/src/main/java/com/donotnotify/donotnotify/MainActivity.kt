@@ -272,6 +272,11 @@ class MainActivity : ComponentActivity() {
                 isServiceEnabled = isServiceEnabled, // Pass isServiceEnabled
                 onSettingsClick = { showSettingsScreen = true },
                 onBrowsePrebuiltRulesClick = { showPrebuiltRulesScreen = true },
+                onToggleAllRules = { enabled ->
+                    val updated = rules.map { it.copy(isEnabled = enabled) }
+                    ruleStorage.saveRules(updated)
+                    rules = updated
+                },
                 onStopMonitoring = { packageName, appName ->
                     unmonitoredAppsStorage.addApp(packageName)
                     unmonitoredApps = unmonitoredAppsStorage.getUnmonitoredApps()
@@ -451,6 +456,7 @@ class MainActivity : ComponentActivity() {
         isServiceEnabled: Boolean, // Pass isServiceEnabled
         onSettingsClick: () -> Unit,
         onBrowsePrebuiltRulesClick: () -> Unit,
+        onToggleAllRules: (Boolean) -> Unit,
         onStopMonitoring: (String, String) -> Unit,
         onResumeMonitoring: (String) -> Unit
     ) {
@@ -525,6 +531,7 @@ class MainActivity : ComponentActivity() {
                             onDeleteNotificationClick = onDeleteNotificationClick,
                             onDeleteHistoryNotificationClick = onDeleteHistoryNotificationClick,
                             onBrowsePrebuiltRulesClick = onBrowsePrebuiltRulesClick,
+                            onToggleAllRules = onToggleAllRules,
                             onStopMonitoring = onStopMonitoring,
                             onResumeMonitoring = onResumeMonitoring
                         )
@@ -550,6 +557,7 @@ class MainActivity : ComponentActivity() {
         onDeleteNotificationClick: (SimpleNotification) -> Unit,
         onDeleteHistoryNotificationClick: (SimpleNotification) -> Unit,
         onBrowsePrebuiltRulesClick: () -> Unit,
+        onToggleAllRules: (Boolean) -> Unit,
         onStopMonitoring: (String, String) -> Unit,
         onResumeMonitoring: (String) -> Unit
     ) {
@@ -564,7 +572,7 @@ class MainActivity : ComponentActivity() {
                 onResumeMonitoring
             )
 
-            1 -> RulesScreen(rules, onRuleClick, onDeleteRuleClick, onBrowsePrebuiltRulesClick)
+            1 -> RulesScreen(rules, onRuleClick, onDeleteRuleClick, onBrowsePrebuiltRulesClick, onToggleAllRules)
             2 -> BlockedScreen(
                 blockedNotifications,
                 onClearBlockedHistory,

@@ -58,6 +58,7 @@
     <string name="no_rules_created">ルールが作成されていません</string>
     <string name="no_rules_created_desc">不要な通知を自動的にブロックするルールを作成しましょう。「履歴」タブで通知をタップしてルールを作成するか、プリセットルールを利用してください。</string>
     <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
+    <string name="rules_master_switch_label">すべてのルールを有効にする</string>
     <string name="how_to_add_rule">新しいルールの追加方法</string>
     <string name="how_to_add_rule_desc">To create a new rule:
 

@@ -58,6 +58,7 @@
     <string name="no_rules_created">Brak reguł</string>
     <string name="no_rules_created_desc">Twórz reguły, aby automatycznie blokować niechciane powiadomienia. Dotknij powiadomienia na karcie Historia, aby utworzyć regułę, lub przeglądaj gotowe reguły.</string>
     <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
+    <string name="rules_master_switch_label">Wszystkie reguły aktywne</string>
     <string name="how_to_add_rule">Jak dodać nową regułę</string>
     <string name="how_to_add_rule_desc">To create a new rule:
 

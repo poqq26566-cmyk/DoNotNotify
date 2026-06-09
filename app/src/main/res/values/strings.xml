@@ -58,6 +58,7 @@
     <string name="no_rules_created">No Rules Created</string>
     <string name="no_rules_created_desc">Create rules to automatically block unwanted notifications. Tap a notification in the History tab to create a rule, or browse pre-built rules.</string>
     <string name="rules_auto_block_desc">Notifications matching the rules below are handled automatically according to each rule.</string>
+    <string name="rules_master_switch_label">All rules active</string>
     <string name="how_to_add_rule">How to Add a New Rule</string>
     <string name="how_to_add_rule_desc">To create a new rule:\n\n1. Switch to the \"History\" tab\n2. Find a notification you want a rule for\n3. Tap on the notification\n4. Select \"Create Rule\" from the options\n5. Customize the rule settings as needed\n\nThe rule will then appear here and apply to matching notifications automatically.</string>
     <string name="add_new_rule">Add a New Rule</string>
