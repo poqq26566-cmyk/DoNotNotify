@@ -5,6 +5,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.Looper
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
@@ -26,6 +28,15 @@ class NotificationBlockerService : NotificationListenerService() {
     companion object {
         const val ACTION_HISTORY_UPDATED = "com.donotnotify.donotnotify.HISTORY_UPDATED"
         private const val DEBOUNCE_PERIOD_MS = 5000L
+        private val HEARTBEAT_INTERVAL_MS = TimeUnit.HOURS.toMillis(1)
+    }
+
+    private val heartbeatHandler = Handler(Looper.getMainLooper())
+    private val heartbeatRunnable: Runnable = object : Runnable {
+        override fun run() {
+            SetupState.recordListenerConnected(this@NotificationBlockerService)
+            heartbeatHandler.postDelayed(this, HEARTBEAT_INTERVAL_MS)
+        }
     }
 
     private val recentlyBlocked = mutableMapOf<String, Long>()
@@ -233,6 +244,8 @@ class NotificationBlockerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         SetupState.recordListenerConnected(this)
+        heartbeatHandler.removeCallbacks(heartbeatRunnable)
+        heartbeatHandler.postDelayed(heartbeatRunnable, HEARTBEAT_INTERVAL_MS)
         Log.i(TAG, "Listener connected")
         // Restart-safety: cancel any of our own stacks that survived a process
         // restart and clear the in-memory registry (no orphans / no id reuse).
@@ -257,6 +270,7 @@ class NotificationBlockerService : NotificationListenerService() {
     }
 
     override fun onListenerDisconnected() {
+        heartbeatHandler.removeCallbacks(heartbeatRunnable)
         super.onListenerDisconnected()
         Log.w(TAG, "Listener disconnected — requesting rebind")
         try {
@@ -267,6 +281,7 @@ class NotificationBlockerService : NotificationListenerService() {
     }
 
     override fun onDestroy() {
+        heartbeatHandler.removeCallbacks(heartbeatRunnable)
         super.onDestroy()
         historyExecutor.shutdown()
         try {
