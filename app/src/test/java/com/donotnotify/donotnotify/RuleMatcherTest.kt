@@ -165,4 +165,126 @@ class RuleMatcherTest {
             rules))
     }
 
+    @Test
+    fun `regex matches single-line title with anchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^-.*",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "-taskname", "Text", listOf(rule)))
+    }
+
+    @Test
+    fun `regex matches multiline title with anchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^-.*",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "-taskname\nToday, 5pm", "Text", listOf(rule)))
+    }
+
+    @Test
+    fun `regex does not match when hyphen is not at start of multiline title`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^-.*",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "Header\n-taskname", "Text", listOf(rule)))
+    }
+
+    @Test
+    fun `regex matches title substring with unanchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "Promo",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        val rules = listOf(rule)
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "Big Promo Deal", "Text", rules))
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "Sale today", "Text", rules))
+    }
+
+    @Test
+    fun `regex matches text substring with unanchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            textFilter = "checked",
+            textMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "Title", "XYZ has checked in", listOf(rule)))
+    }
+
+    @Test
+    fun `regex matches start-only anchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^Promo",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        val rules = listOf(rule)
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "Promo Deal", "Text", rules))
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "Sale Promo", "Text", rules))
+    }
+
+    @Test
+    fun `regex matches end-only anchored pattern`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "[0-9]+$",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        val rules = listOf(rule)
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "OTP 1234", "Text", rules))
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "1234 OTP", "Text", rules))
+    }
+
+    @Test
+    fun `regex end-anchor matches field with trailing newline`() {
+        val ruleLoose = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^foo$",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        val ruleStrict = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "\\Afoo\\z",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.DENYLIST
+        )
+        // ^foo$ matches before the trailing \n (Java $ semantics)
+        assertTrue(RuleMatcher.shouldBlock("com.example.app", "foo\n", "Text", listOf(ruleLoose)))
+        // \A...\z is strict whole-input: does not match trailing \n
+        assertFalse(RuleMatcher.shouldBlock("com.example.app", "foo\n", "Text", listOf(ruleStrict)))
+    }
+
+    @Test
+    fun `regex stack rule matches with regex pattern via planNotificationDecision`() {
+        val rule = BlockerRule(
+            packageName = "com.example.app",
+            titleFilter = "^-.*",
+            titleMatchType = MatchType.REGEX,
+            ruleType = RuleType.STACK
+        )
+        val decision = RuleMatcher.planNotificationDecision(
+            rules = listOf(rule),
+            packageName = "com.example.app",
+            title = "-taskname\nToday",
+            text = "Text",
+            wasOngoing = false
+        )
+        assertTrue(decision.shouldStack)
+        assertEquals(listOf(0), decision.matchedRuleIndices)
+    }
+
 }

@@ -48,12 +48,12 @@ object RuleMatcher {
 
         try {
             val titleMatch = when (rule.titleMatchType) {
-                MatchType.REGEX -> rule.titleFilter.isNullOrBlank() || (title?.matches(getCachedRegex(rule.titleFilter)) ?: false)
+                MatchType.REGEX -> rule.titleFilter.isNullOrBlank() || (title != null && getCachedRegex(rule.titleFilter).containsMatchIn(title))
                 MatchType.CONTAINS -> rule.titleFilter.isNullOrBlank() || (title?.contains(rule.titleFilter, ignoreCase = true) ?: false)
             }
 
             val textMatch = when (rule.textMatchType) {
-                MatchType.REGEX -> rule.textFilter.isNullOrBlank() || (text?.matches(getCachedRegex(rule.textFilter)) ?: false)
+                MatchType.REGEX -> rule.textFilter.isNullOrBlank() || (text != null && getCachedRegex(rule.textFilter).containsMatchIn(text))
                 MatchType.CONTAINS -> rule.textFilter.isNullOrBlank() || (text?.contains(rule.textFilter, ignoreCase = true) ?: false)
             }
 
