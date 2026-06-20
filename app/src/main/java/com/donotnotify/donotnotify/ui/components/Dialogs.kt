@@ -3,6 +3,7 @@ package com.donotnotify.donotnotify.ui.components
 import android.app.TimePickerDialog
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,11 +35,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.donotnotify.donotnotify.AdvancedRuleConfig
 import com.donotnotify.donotnotify.BlockerRule
 import com.donotnotify.donotnotify.MatchType
@@ -202,7 +207,27 @@ private fun RuleDialog(
         )
     }
 
-    Dialog(onDismissRequest = onDismiss) {
+    val view = LocalView.current
+    Dialog(
+        onDismissRequest = onDismiss,
+        // Don't let the back gesture or an edge/outside touch auto-dismiss the
+        // dialog. We handle back ourselves: a visible keyboard is hidden first,
+        // so edits aren't lost; a second back (keyboard down) dismisses.
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        )
+    ) {
+        BackHandler {
+            val imeVisible = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            if (imeVisible) {
+                ViewCompat.getWindowInsetsController(view)
+                    ?.hide(WindowInsetsCompat.Type.ime())
+            } else {
+                onDismiss()
+            }
+        }
         Card {
             Column(
                 modifier = Modifier
