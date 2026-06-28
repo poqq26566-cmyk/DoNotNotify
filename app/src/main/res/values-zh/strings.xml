@@ -3,7 +3,7 @@
     简体中文 (zh) 翻译。由 LLM 翻译，等待母语者审校。
 -->
 <resources>
-    <string name="app_name">DoNotNotify</string>
+    <string name="app_name">DoNotNotify</string>  
 
     <!-- Tabs -->
     <string name="tab_history">历史 (%d)</string>
